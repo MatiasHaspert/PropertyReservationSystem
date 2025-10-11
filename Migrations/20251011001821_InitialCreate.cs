@@ -12,6 +12,41 @@ namespace ReservaPropiedades.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Servicios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Servicios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ubicacion_Ciudad = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ubicacion_Pais = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ubicacion_Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ubicacion_CodigoPostal = table.Column<int>(type: "int", nullable: false),
+                    Ubicacion_Provincia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Propiedades",
                 columns: table => new
                 {
@@ -25,25 +60,18 @@ namespace ReservaPropiedades.Migrations
                     Ubicacion_Pais = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ubicacion_Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ubicacion_CodigoPostal = table.Column<int>(type: "int", nullable: false),
-                    Ubicacion_Provincia = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Ubicacion_Provincia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Propiedades", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Servicios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Servicios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Propiedades_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,28 +119,6 @@ namespace ReservaPropiedades.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reseñas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Calificacion = table.Column<int>(type: "int", nullable: false),
-                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PropiedadId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reseñas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reseñas_Propiedades_PropiedadId",
-                        column: x => x.PropiedadId,
-                        principalTable: "Propiedades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PropiedadServicio",
                 columns: table => new
                 {
@@ -136,6 +142,35 @@ namespace ReservaPropiedades.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reseñas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Calificacion = table.Column<int>(type: "int", nullable: false),
+                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PropiedadId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reseñas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reseñas_Propiedades_PropiedadId",
+                        column: x => x.PropiedadId,
+                        principalTable: "Propiedades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reseñas_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DisponibilidadesPropiedades_PropiedadId",
                 table: "DisponibilidadesPropiedades",
@@ -147,6 +182,11 @@ namespace ReservaPropiedades.Migrations
                 column: "PropiedadId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Propiedades_UsuarioId",
+                table: "Propiedades",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PropiedadServicio_ServiciosId",
                 table: "PropiedadServicio",
                 column: "ServiciosId");
@@ -155,6 +195,11 @@ namespace ReservaPropiedades.Migrations
                 name: "IX_Reseñas_PropiedadId",
                 table: "Reseñas",
                 column: "PropiedadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reseñas_UsuarioId",
+                table: "Reseñas",
+                column: "UsuarioId");
         }
 
         /// <inheritdoc />
@@ -177,6 +222,9 @@ namespace ReservaPropiedades.Migrations
 
             migrationBuilder.DropTable(
                 name: "Propiedades");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
         }
     }
 }

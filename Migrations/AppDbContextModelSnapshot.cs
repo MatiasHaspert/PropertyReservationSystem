@@ -116,7 +116,12 @@ namespace ReservaPropiedades.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Propiedades");
                 });
@@ -142,9 +147,14 @@ namespace ReservaPropiedades.Migrations
                     b.Property<int>("PropiedadId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PropiedadId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Reseñas");
                 });
@@ -168,6 +178,34 @@ namespace ReservaPropiedades.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Servicios");
+                });
+
+            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Telefono")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("PropiedadServicio", b =>
@@ -209,6 +247,12 @@ namespace ReservaPropiedades.Migrations
 
             modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Propiedad", b =>
                 {
+                    b.HasOne("ReservaPropiedades.Domain.Entities.Usuario", "Usuario")
+                        .WithMany("Propiedades")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("ReservaPropiedades.Domain.ValueObjects.Ubicacion", "Ubicacion", b1 =>
                         {
                             b1.Property<int>("PropiedadId")
@@ -243,6 +287,8 @@ namespace ReservaPropiedades.Migrations
 
                     b.Navigation("Ubicacion")
                         .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Reseña", b =>
@@ -253,12 +299,65 @@ namespace ReservaPropiedades.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ReservaPropiedades.Domain.Entities.Usuario", "Usuario")
+                        .WithMany("Reseñas")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Propiedad");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Usuario", b =>
+                {
+                    b.OwnsOne("ReservaPropiedades.Domain.ValueObjects.Ubicacion", "Ubicacion", b1 =>
+                        {
+                            b1.Property<int>("UsuarioId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ciudad")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("CodigoPostal")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Direccion")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Pais")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Provincia")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("Usuarios");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.Navigation("Ubicacion")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Propiedad", b =>
                 {
                     b.Navigation("Imagenes");
+
+                    b.Navigation("Reseñas");
+                });
+
+            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Usuario", b =>
+                {
+                    b.Navigation("Propiedades");
 
                     b.Navigation("Reseñas");
                 });

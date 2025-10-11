@@ -20,6 +20,8 @@ namespace ReservaPropiedades.Domain.Entities
         public string Titulo { get; set; } = string.Empty;
         [Required]
         public Ubicacion Ubicacion { get; set; } = new Ubicacion();
+        public int UsuarioId { get; set; }
+        public Usuario Usuario { get; set; } = null!;
 
         public ICollection<Servicio> Servicios { get; set; } = new List<Servicio>();
 

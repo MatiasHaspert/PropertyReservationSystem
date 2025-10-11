@@ -13,7 +13,7 @@ namespace ReservaPropiedades.Domain.Entities
         public DateTime Fecha { get; set; }
         public int PropiedadId { get; set; }
         public Propiedad Propiedad { get; set; } = null!;
-        //public int UsuarioId { get; set; }
-        //public Usuario Usuario { get; set; }
+        public int UsuarioId { get; set; }
+        public Usuario Usuario { get; set; } = null!;
     }
 }
