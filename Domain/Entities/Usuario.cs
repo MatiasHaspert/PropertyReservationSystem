@@ -16,16 +16,11 @@ namespace ReservaPropiedades.Domain.Entities
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
         public Ubicacion Ubicacion { get; set; } = new Ubicacion();
-        public int Telefono { get; set; } 
+        [MaxLength(20)]
+        public string Telefono { get; set; } = string.Empty;
         // Roles
         public ICollection<Propiedad> Propiedades { get; set; } = new List<Propiedad>();
         public ICollection<Reseña> Reseñas { get; set; } = new List<Reseña>();
-
-
-
-
-
-
 
     }
 }
