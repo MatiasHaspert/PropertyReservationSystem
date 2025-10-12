@@ -1,5 +1,5 @@
 ﻿using ReservaPropiedades.Domain.Entities;
-using ReservaPropiedades.Application.DTOs;
+using ReservaPropiedades.Application.DTOs.Propiedad;
 namespace ReservaPropiedades.Application.Interfaces
 {
     public interface IPropiedadService

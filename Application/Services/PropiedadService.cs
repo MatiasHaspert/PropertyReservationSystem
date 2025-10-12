@@ -2,7 +2,7 @@
 using ReservaPropiedades.Domain.Interfaces;
 using ReservaPropiedades.Domain.Entities;
 using ReservaPropiedades.Domain.ValueObjects;
-using ReservaPropiedades.Application.DTOs; 
+using ReservaPropiedades.Application.DTOs.Propiedad;
 
 namespace ReservaPropiedades.Application.Services
 {
@@ -58,6 +58,7 @@ namespace ReservaPropiedades.Application.Services
             return _propiedadRepository.Exists(id);
         }
 
+        // Posibilidad de luego usar AutoMapper
         public Propiedad mapearDtoPropiedad(PropiedadRequestDTO dto)
         {
             return new Propiedad

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ReservaPropiedades.Application.Interfaces;
 using ReservaPropiedades.Domain.Entities;
 using ReservaPropiedades.Infrastructure.Data;
-using ReservaPropiedades.Application.DTOs;
+using ReservaPropiedades.Application.DTOs.Propiedad;
 
 namespace ReservaPropiedades.WebAPI.Controllers
 {

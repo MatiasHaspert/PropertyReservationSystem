@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ReservaPropiedades.Application.DTOs
+namespace ReservaPropiedades.Application.DTOs.Propiedad
 {
     public class PropiedadRequestDTO
     {

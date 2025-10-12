@@ -21,6 +21,5 @@ namespace ReservaPropiedades.Domain.Entities
         // Roles
         public ICollection<Propiedad> Propiedades { get; set; } = new List<Propiedad>();
         public ICollection<Reseña> Reseñas { get; set; } = new List<Reseña>();
-
     }
 }
