@@ -24,10 +24,11 @@ namespace ReservaPropiedades.Infrastructure.Repositories
             return await _context.Propiedades.FindAsync(id);
         }
 
-        public async Task AddAsync(Propiedad propiedad)
+        public async Task<Propiedad> AddAsync(Propiedad propiedad)
         {
-            await _context.Propiedades.AddAsync(propiedad);
+            var propiedadResult = await _context.Propiedades.AddAsync(propiedad);
             await _context.SaveChangesAsync();
+            return propiedadResult.Entity;
         }
 
         public async Task UpdateAsync(Propiedad propiedad)

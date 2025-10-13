@@ -39,8 +39,7 @@ namespace ReservaPropiedades.Application.Services
         public async Task<Propiedad> CreatePropiedadAsync(PropiedadRequestDTO propiedadDTO)
         {
             Propiedad propiedad = mapearDtoPropiedad(propiedadDTO);
-            propiedad = await _propiedadRepository.AddAsync(propiedad);
-            return propiedad;
+            return await _propiedadRepository.AddAsync(propiedad);
         }
 
         public async Task<bool> DeletePropiedadAsync(int id)
