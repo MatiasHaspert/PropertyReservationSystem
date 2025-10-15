@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using ReservaPropiedades.Domain.Interfaces;
-using ReservaPropiedades.Infrastructure.Data;
-using ReservaPropiedades.Infrastructure.Repositories;
-using ReservaPropiedades.Application.Interfaces;
-using ReservaPropiedades.Application.Services;
+using PropertyReservation.Domain.Interfaces;
+using PropertyReservation.Infrastructure.Data;
+using PropertyReservation.Infrastructure.Repositories;
+using PropertyReservation.Application.Interfaces;
+using PropertyReservation.Application.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,10 +15,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString)
     );
 
-builder.Services.AddScoped<IReseñaRepository, ReseñaRepository>();
-builder.Services.AddScoped<IReseñaService, ReseñaService>();
-builder.Services.AddScoped<IPropiedadRepository, PropiedadRepository>();
-builder.Services.AddScoped<IPropiedadService, PropiedadService>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

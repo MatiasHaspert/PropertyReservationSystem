@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ReservaPropiedades.Infrastructure.Data;
+using PropertyReservation.Infrastructure.Data;
 
 #nullable disable
 
-namespace ReservaPropiedades.Migrations
+namespace PropertyReservation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20251011001821_InitialCreate")]
@@ -25,22 +25,22 @@ namespace ReservaPropiedades.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PropiedadServicio", b =>
+            modelBuilder.Entity("PropiedadAmenity", b =>
                 {
                     b.Property<int>("PropiedadesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiciosId")
+                    b.Property<int>("AmenitiesId")
                         .HasColumnType("int");
 
-                    b.HasKey("PropiedadesId", "ServiciosId");
+                    b.HasKey("PropiedadesId", "AmenitiesId");
 
-                    b.HasIndex("ServiciosId");
+                    b.HasIndex("AmenitiesId");
 
-                    b.ToTable("PropiedadServicio");
+                    b.ToTable("PropiedadAmenity");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.DisponibilidadPropiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.PropertyAvailability", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,23 +48,23 @@ namespace ReservaPropiedades.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("FechaFin")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaInicio")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PropiedadId")
+                    b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropiedadId");
+                    b.HasIndex("PropertyId");
 
-                    b.ToTable("DisponibilidadesPropiedades");
+                    b.ToTable("AvailabilitiesPropiedades");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.ImagenPropiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.PropertyImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,17 +72,17 @@ namespace ReservaPropiedades.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("EsImagenPrincipal")
+                    b.Property<bool>("IsMainImage")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("FechaCreacion")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("NombreArchivo")
+                    b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PropiedadId")
+                    b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
@@ -91,12 +91,12 @@ namespace ReservaPropiedades.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropiedadId");
+                    b.HasIndex("PropertyId");
 
-                    b.ToTable("ImagenesPropiedades");
+                    b.ToTable("ImagesPropiedades");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Propiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.Property", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,32 +104,32 @@ namespace ReservaPropiedades.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CapacidadHuespedes")
+                    b.Property<int>("MaxGuests")
                         .HasColumnType("int");
 
-                    b.Property<string>("Descripcion")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PrecioPorNoche")
+                    b.Property<decimal>("NightlyPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Titulo")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Propiedades");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Reseña", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,32 +137,32 @@ namespace ReservaPropiedades.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Calificacion")
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<string>("Comentario")
+                    b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Fecha")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PropiedadId")
+                    b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropiedadId");
+                    b.HasIndex("PropertyId");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Reseñas");
+                    b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Servicio", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.Amenity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -170,20 +170,20 @@ namespace ReservaPropiedades.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Descripcion")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Servicios");
+                    b.ToTable("Amenities");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Usuario", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +191,7 @@ namespace ReservaPropiedades.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Apellido")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -199,170 +199,170 @@ namespace ReservaPropiedades.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Telefono")
+                    b.Property<int>("Phone")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("PropiedadServicio", b =>
+            modelBuilder.Entity("PropiedadAmenity", b =>
                 {
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Propiedad", null)
+                    b.HasOne("PropertyReservation.Domain.Entities.Property", null)
                         .WithMany()
                         .HasForeignKey("PropiedadesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Servicio", null)
+                    b.HasOne("PropertyReservation.Domain.Entities.Amenity", null)
                         .WithMany()
-                        .HasForeignKey("ServiciosId")
+                        .HasForeignKey("AmenitiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.DisponibilidadPropiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.PropertyAvailability", b =>
                 {
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Propiedad", "Propiedad")
+                    b.HasOne("PropertyReservation.Domain.Entities.Property", "Property")
                         .WithMany()
-                        .HasForeignKey("PropiedadId")
+                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Propiedad");
+                    b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.ImagenPropiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.PropertyImage", b =>
                 {
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Propiedad", "Propiedad")
-                        .WithMany("Imagenes")
-                        .HasForeignKey("PropiedadId")
+                    b.HasOne("PropertyReservation.Domain.Entities.Property", "Property")
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Propiedad");
+                    b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Propiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.Property", b =>
                 {
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Usuario", "Usuario")
+                    b.HasOne("PropertyReservation.Domain.Entities.User", "User")
                         .WithMany("Propiedades")
-                        .HasForeignKey("UsuarioId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ReservaPropiedades.Domain.ValueObjects.Ubicacion", "Ubicacion", b1 =>
+                    b.OwnsOne("PropertyReservation.Domain.ValueObjects.Address", "Address", b1 =>
                         {
-                            b1.Property<int>("PropiedadId")
+                            b1.Property<int>("PropertyId")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Ciudad")
+                            b1.Property<string>("City")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<int>("CodigoPostal")
+                            b1.Property<int>("PostalCode")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Direccion")
+                            b1.Property<string>("StreetAddress")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Pais")
+                            b1.Property<string>("Country")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Provincia")
+                            b1.Property<string>("State")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("PropiedadId");
+                            b1.HasKey("PropertyId");
 
                             b1.ToTable("Propiedades");
 
                             b1.WithOwner()
-                                .HasForeignKey("PropiedadId");
+                                .HasForeignKey("PropertyId");
                         });
 
-                    b.Navigation("Ubicacion")
+                    b.Navigation("Address")
                         .IsRequired();
 
-                    b.Navigation("Usuario");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Reseña", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Propiedad", "Propiedad")
-                        .WithMany("Reseñas")
-                        .HasForeignKey("PropiedadId")
+                    b.HasOne("PropertyReservation.Domain.Entities.Property", "Property")
+                        .WithMany("Reviews")
+                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ReservaPropiedades.Domain.Entities.Usuario", "Usuario")
-                        .WithMany("Reseñas")
-                        .HasForeignKey("UsuarioId")
+                    b.HasOne("PropertyReservation.Domain.Entities.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Propiedad");
+                    b.Navigation("Property");
 
-                    b.Navigation("Usuario");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Usuario", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.User", b =>
                 {
-                    b.OwnsOne("ReservaPropiedades.Domain.ValueObjects.Ubicacion", "Ubicacion", b1 =>
+                    b.OwnsOne("PropertyReservation.Domain.ValueObjects.Address", "Address", b1 =>
                         {
-                            b1.Property<int>("UsuarioId")
+                            b1.Property<int>("UserId")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Ciudad")
+                            b1.Property<string>("City")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<int>("CodigoPostal")
+                            b1.Property<int>("PostalCode")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Direccion")
+                            b1.Property<string>("StreetAddress")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Pais")
+                            b1.Property<string>("Country")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Provincia")
+                            b1.Property<string>("State")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("UsuarioId");
+                            b1.HasKey("UserId");
 
-                            b1.ToTable("Usuarios");
+                            b1.ToTable("Users");
 
                             b1.WithOwner()
-                                .HasForeignKey("UsuarioId");
+                                .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("Ubicacion")
+                    b.Navigation("Address")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Propiedad", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.Property", b =>
                 {
-                    b.Navigation("Imagenes");
+                    b.Navigation("Images");
 
-                    b.Navigation("Reseñas");
+                    b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("ReservaPropiedades.Domain.Entities.Usuario", b =>
+            modelBuilder.Entity("PropertyReservation.Domain.Entities.User", b =>
                 {
                     b.Navigation("Propiedades");
 
-                    b.Navigation("Reseñas");
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReservaPropiedades.Domain.Entities;
-using ReservaPropiedades.Domain.ValueObjects;
+using PropertyReservation.Domain.Entities;
+using PropertyReservation.Domain.ValueObjects;
 
-namespace ReservaPropiedades.Infrastructure.Data
+namespace PropertyReservation.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
@@ -11,49 +11,49 @@ namespace ReservaPropiedades.Infrastructure.Data
            
         }
         
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Propiedad> Propiedades { get; set; }
-        public DbSet<ImagenPropiedad> ImagenesPropiedades { get; set; }
-        public DbSet<Servicio> Servicios { get; set; }
-        public DbSet<DisponibilidadPropiedad> DisponibilidadesPropiedades { get; set; }
-        public DbSet<Reseña> Reseñas { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Property> Properties { get; set; }
+        public DbSet<PropertyImage> PropertyImages { get; set; }
+        public DbSet<Amenity> Amenities { get; set; }
+        public DbSet<PropertyAvailability> PropertyAvailabilities { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-            modelBuilder.Entity<Propiedad>().OwnsOne(p => p.Ubicacion);
-            modelBuilder.Entity<Usuario>().OwnsOne(u => u.Ubicacion);
+            modelBuilder.Entity<Property>().OwnsOne(p => p.Address);
+            modelBuilder.Entity<User>().OwnsOne(u => u.Address);
 
-            modelBuilder.Entity<Propiedad>().HasData(
+            modelBuilder.Entity<Property>().HasData(
                 new
                 {
                     Id = 1,
-                    Titulo = "Casa de prueba en la playa",
-                    Descripcion = "Hermosa casa frente al mar con pileta y parrilla.",
-                    PrecioPorNoche = 15000m,
-                    CapacidadHuespedes = 4,
-                    NumeroHabitaciones = 2,
-                    NumeroBaños = 1,
-                    UsuarioId = 1,
-                    Ubicacion_Ciudad = "Mar del Plata",
-                    Ubicacion_Provincia = "Buenos Aires",
-                    Ubicacion_Pais = "Argentina",
-                    Ubicacion_Direccion = "Av. Costanera 1234"
+                    Title = "Casa de prueba en la playa",
+                    Description = "Hermosa casa frente al mar con pileta y parrilla.",
+                    NightlyPrice = 15000m,
+                    MaxGuests = 4,
+                    Bedrooms = 2,
+                    Bathrooms = 1,
+                    UserId = 1,
+                    Address_City = "Mar del Plata",
+                    Address_State = "Buenos Aires",
+                    Address_Country = "Argentina",
+                    Address_StreetAddress = "Av. Costanera 1234"
                 }
             );
 
-            // Índice único filtrado: solo una imagen principal por propiedad
-            modelBuilder.Entity<ImagenPropiedad>()
-                .HasIndex(i => new { i.PropiedadId, i.EsImagenPrincipal })
+            // Índice único filtrado: solo una imagen principal por property
+            modelBuilder.Entity<PropertyImage>()
+                .HasIndex(i => new { i.PropertyId, i.IsMainImage })
                 .IsUnique()
-                .HasFilter("[EsImagenPrincipal] = 1");
+                .HasFilter("[IsMainImage] = 1");
 
-            // Configurar la relación entre Reseña y Usuario para evitar eliminación en cascada
-            modelBuilder.Entity<Reseña>()
-                        .HasOne(r => r.Usuario)
-                        .WithMany(u => u.Reseñas)
-                        .HasForeignKey(r => r.UsuarioId)
+            // Configurar la relación entre Review y User para evitar eliminación en cascada
+            modelBuilder.Entity<Review>()
+                        .HasOne(r => r.User)
+                        .WithMany(u => u.Reviews)
+                        .HasForeignKey(r => r.UserId)
                         .OnDelete(DeleteBehavior.Restrict); // o DeleteBehavior.NoAction
             
             base.OnModelCreating(modelBuilder);

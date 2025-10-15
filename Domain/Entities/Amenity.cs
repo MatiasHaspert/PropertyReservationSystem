@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ReservaPropiedades.Domain.Entities
+namespace PropertyReservation.Domain.Entities
 {
     public class Servicio
     {
@@ -9,9 +9,9 @@ namespace ReservaPropiedades.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Nombre { get; set; } = string.Empty;
-        public string Descripcion { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
-        public ICollection<Propiedad> Propiedades { get; set; } = new List<Propiedad>();
+        public ICollection<Property> Properties { get; set; } = new List<Property>();
     }
 }

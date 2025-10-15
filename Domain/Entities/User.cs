@@ -1,0 +1,25 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using PropertyReservation.Domain.ValueObjects;
+
+namespace PropertyReservation.Domain.Entities
+{
+    // User prueba 
+    public class User
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+        public Address Address { get; set; } = new Address();
+        [MaxLength(20)]
+        public string Phone { get; set; } = string.Empty;
+        // Roles
+        public ICollection<Property> Properties { get; set; } = new List<Property>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+    }
+}
