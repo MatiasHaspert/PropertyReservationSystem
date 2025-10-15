@@ -4,15 +4,19 @@ using ReservaPropiedades.Infrastructure.Data;
 using ReservaPropiedades.Infrastructure.Repositories;
 using ReservaPropiedades.Application.Interfaces;
 using ReservaPropiedades.Application.Services;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
+ 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString)
     );
 
+builder.Services.AddScoped<IReseñaRepository, ReseñaRepository>();
+builder.Services.AddScoped<IReseñaService, ReseñaService>();
 builder.Services.AddScoped<IPropiedadRepository, PropiedadRepository>();
 builder.Services.AddScoped<IPropiedadService, PropiedadService>();
 builder.Services.AddControllers();

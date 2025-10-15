@@ -7,13 +7,14 @@
         public decimal PrecioPorNoche { get; set; }
         public int CapacidadHuespedes { get; set; }
         public string Titulo { get; set; } = string.Empty;
+        public int NumeroHabitaciones { get; set; }
+        public int NumeroBaños { get; set; }
         public UbicacionDTO Ubicacion { get; set; } = new UbicacionDTO();
         // Luego UsuarioDTO, anfitrion
         //public UsuarioDTO Anfitrion { get; set; } = new UsuarioDTO();
         // Luego van los dtos de servicios, imagenes y reseñas
         public List<string> Servicios { get; set; } = new List<string>();
         public List<string> Imagenes { get; set; } = new List<string>();
-        
         public List<string> Reseñas { get; set; } = new List<string>();
     }
 }

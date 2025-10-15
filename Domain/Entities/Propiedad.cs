@@ -18,15 +18,16 @@ namespace ReservaPropiedades.Domain.Entities
         public int CapacidadHuespedes { get; set; }
         [Required]
         public string Titulo { get; set; } = string.Empty;
+        public int NumeroHabitaciones { get; set; }
+        public int NumeroBaños { get; set; }
         [Required]
         public Ubicacion Ubicacion { get; set; } = new Ubicacion();
         public int UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
-
         public ICollection<Servicio> Servicios { get; set; } = new List<Servicio>();
-
         public ICollection<Reseña> Reseñas { get; set; } = new List<Reseña>();
-
         public ICollection<ImagenPropiedad> Imagenes { get; set; } = new List<ImagenPropiedad>();
+        public ICollection<DisponibilidadPropiedad> Disponibilidades { get; set; } = new List<DisponibilidadPropiedad>();
+
     }
 }

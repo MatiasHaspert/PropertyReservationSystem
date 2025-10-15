@@ -22,6 +22,7 @@ namespace ReservaPropiedades.Application.Services
 
         public async Task<Propiedad> GetPropiedadByIdAsync(int id)
         {
+            
             return await _propiedadRepository.GetByIdAsync(id);
         }
 
