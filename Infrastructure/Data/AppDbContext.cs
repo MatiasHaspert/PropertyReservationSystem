@@ -25,10 +25,9 @@ namespace PropertyReservation.Infrastructure.Data
             modelBuilder.Entity<Property>().OwnsOne(p => p.Address);
             modelBuilder.Entity<User>().OwnsOne(u => u.Address);
 
-            modelBuilder.Entity<Property>().HasData(
+            /* modelBuilder.Entity<Property>().HasData(
                 new
                 {
-                    Id = 1,
                     Title = "Casa de prueba en la playa",
                     Description = "Hermosa casa frente al mar con pileta y parrilla.",
                     NightlyPrice = 15000m,
@@ -41,7 +40,7 @@ namespace PropertyReservation.Infrastructure.Data
                     Address_Country = "Argentina",
                     Address_StreetAddress = "Av. Costanera 1234"
                 }
-            );
+            );*/
 
             // Índice único filtrado: solo una imagen principal por property
             modelBuilder.Entity<PropertyImage>()

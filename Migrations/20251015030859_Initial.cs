@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PropertyReservation.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,7 +39,7 @@ namespace PropertyReservation.Migrations
                     Address_StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address_PostalCode = table.Column<int>(type: "int", nullable: false),
                     Address_State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<int>(type: "int", nullable: false)
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,7 @@ namespace PropertyReservation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Propiedades",
+                name: "Properties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -56,6 +56,8 @@ namespace PropertyReservation.Migrations
                     NightlyPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     MaxGuests = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bedrooms = table.Column<int>(type: "int", nullable: false),
+                    Bathrooms = table.Column<int>(type: "int", nullable: false),
                     Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address_StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -65,9 +67,9 @@ namespace PropertyReservation.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Propiedades", x => x.Id);
+                    table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Propiedades_Users_UserId",
+                        name: "FK_Properties_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -75,7 +77,31 @@ namespace PropertyReservation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AvailabilitiesPropiedades",
+                name: "AmenityProperty",
+                columns: table => new
+                {
+                    AmenitiesId = table.Column<int>(type: "int", nullable: false),
+                    PropertiesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AmenityProperty", x => new { x.AmenitiesId, x.PropertiesId });
+                    table.ForeignKey(
+                        name: "FK_AmenityProperty_Amenities_AmenitiesId",
+                        column: x => x.AmenitiesId,
+                        principalTable: "Amenities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AmenityProperty_Properties_PropertiesId",
+                        column: x => x.PropertiesId,
+                        principalTable: "Properties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PropertyAvailabilities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -86,17 +112,17 @@ namespace PropertyReservation.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AvailabilitiesPropiedades", x => x.Id);
+                    table.PrimaryKey("PK_PropertyAvailabilities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AvailabilitiesPropiedades_Propiedades_PropertyId",
+                        name: "FK_PropertyAvailabilities_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Propiedades",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ImagesPropiedades",
+                name: "PropertyImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -109,35 +135,11 @@ namespace PropertyReservation.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImagesPropiedades", x => x.Id);
+                    table.PrimaryKey("PK_PropertyImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ImagesPropiedades_Propiedades_PropertyId",
+                        name: "FK_PropertyImages_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Propiedades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PropiedadAmenity",
-                columns: table => new
-                {
-                    PropiedadesId = table.Column<int>(type: "int", nullable: false),
-                    AmenitiesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PropiedadAmenity", x => new { x.PropiedadesId, x.AmenitiesId });
-                    table.ForeignKey(
-                        name: "FK_PropiedadAmenity_Propiedades_PropiedadesId",
-                        column: x => x.PropiedadesId,
-                        principalTable: "Propiedades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PropiedadAmenity_Amenities_AmenitiesId",
-                        column: x => x.AmenitiesId,
-                        principalTable: "Amenities",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -158,9 +160,9 @@ namespace PropertyReservation.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Propiedades_PropertyId",
+                        name: "FK_Reviews_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Propiedades",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -172,24 +174,26 @@ namespace PropertyReservation.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AvailabilitiesPropiedades_PropertyId",
-                table: "AvailabilitiesPropiedades",
-                column: "PropertyId");
+                name: "IX_AmenityProperty_PropertiesId",
+                table: "AmenityProperty",
+                column: "PropertiesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ImagesPropiedades_PropertyId",
-                table: "ImagesPropiedades",
-                column: "PropertyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Propiedades_UserId",
-                table: "Propiedades",
+                name: "IX_Properties_UserId",
+                table: "Properties",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PropiedadAmenity_AmenitiesId",
-                table: "PropiedadAmenity",
-                column: "AmenitiesId");
+                name: "IX_PropertyAvailabilities_PropertyId",
+                table: "PropertyAvailabilities",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PropertyImages_PropertyId_IsMainImage",
+                table: "PropertyImages",
+                columns: new[] { "PropertyId", "IsMainImage" },
+                unique: true,
+                filter: "[IsMainImage] = 1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_PropertyId",
@@ -206,13 +210,13 @@ namespace PropertyReservation.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AvailabilitiesPropiedades");
+                name: "AmenityProperty");
 
             migrationBuilder.DropTable(
-                name: "ImagesPropiedades");
+                name: "PropertyAvailabilities");
 
             migrationBuilder.DropTable(
-                name: "PropiedadAmenity");
+                name: "PropertyImages");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -221,7 +225,7 @@ namespace PropertyReservation.Migrations
                 name: "Amenities");
 
             migrationBuilder.DropTable(
-                name: "Propiedades");
+                name: "Properties");
 
             migrationBuilder.DropTable(
                 name: "Users");
