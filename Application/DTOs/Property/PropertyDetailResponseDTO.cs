@@ -10,6 +10,7 @@
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
         public AddressDTO Address { get; set; } = new AddressDTO();
+        public decimal AverageRating { get; set; } // Calificación promedio de reseñas
         // Luego UserDTO, anfitrion
         //public UserDTO Anfitrion { get; set; } = new UserDTO();
         // Luego van los dtos de Amenities, Images y Reviews

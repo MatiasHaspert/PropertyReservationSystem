@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PropertyReservation.Application.Interfaces;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Infrastructure.Data;
+using PropertyReservation.Application.DTOs.Review;
 
 namespace PropertyReservation.WebAPI.Controllers
 {
@@ -24,7 +25,7 @@ namespace PropertyReservation.WebAPI.Controllers
 
         // GET: api/Review?propertyId=5
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Review>>> GetPropertyReviews([FromQuery] int propertyId)
+        public async Task<ActionResult<IEnumerable<ReviewResponseDTO>>> GetPropertyReviews([FromQuery] int propertyId)
         {
             var Reviews = await _ReviewService.GetPropertyReviewsAsync(propertyId);
 
@@ -34,12 +35,12 @@ namespace PropertyReservation.WebAPI.Controllers
             return Ok(Reviews);
         }
 
-        /*
+        
         // GET: api/Review/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Review>> GetReview(int id)
+        public async Task<ActionResult<ReviewResponseDTO>> GetReview(int id, [FromQuery] int propertyId)
         {
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _ReviewService.GetPropertyReviewByIdAsync(propertyId, id);
 
             if (review == null)
             {
@@ -49,68 +50,39 @@ namespace PropertyReservation.WebAPI.Controllers
             return review;
         }
 
+        
         // PUT: api/Review/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReview(int id, Review review)
+        public async Task<IActionResult> PutReview(int id, ReviewRequestDTO reviewRequestDTO)
         {
-            if (id != review.Id)
+            var result = await _ReviewService.UpdateReviewAsync(id, reviewRequestDTO);
+            if (!result)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(review).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReviewExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
         // POST: api/Review
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Review>> PostReview(Review review)
+        public async Task<ActionResult<ReviewResponseDTO>> PostReview(ReviewRequestDTO reviewRequestDTO)
         {
-            _context.Reviews.Add(review);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetReview", new { id = review.Id }, review);
+            var createdReview = await _ReviewService.CreateReviewAsync(reviewRequestDTO);
+            return CreatedAtAction("GetReview", new { id = createdReview.Id, propertyId = createdReview.PropertyId }, createdReview);
         }
 
         // DELETE: api/Review/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null)
+            var result = await _ReviewService.DeleteReviewAsync(id);
+
+            if (!result)
             {
                 return NotFound();
             }
 
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
-
-        private bool ReviewExists(int id)
-        {
-            return _context.Reviews.Any(e => e.Id == id);
-        }
-        */
     }
 }

@@ -12,8 +12,8 @@ using PropertyReservation.Infrastructure.Data;
 namespace PropertyReservation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251015030859_Initial")]
-    partial class Initial
+    [Migration("20251015124736_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

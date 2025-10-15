@@ -4,12 +4,10 @@ namespace PropertyReservation.Domain.Interfaces
     public interface IReviewRepository
     {
         Task<IEnumerable<Review>> GetPropertyReviewsAsync(int propertyId);
-        //Task<Review?> GetByIdAsync(int id);
-        //Task<Review> AddAsync(Review review);
-        //Task UpdateAsync(Review review);
-        //Task DeleteAsync(int id);
-        //bool Exists(int id);
-
-
+        Task<Review?> GetPropertyReviewByIdAsync(int propertyId, int reviewId);
+        Task<Review> CreateReviewAsync(Review review);
+        Task UpdateReviewAsync(Review review);
+        Task DeleteAsync(int reviewId);
+        bool ReviewExists(int reviewId);
     }
 }

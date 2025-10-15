@@ -26,9 +26,9 @@ namespace PropertyReservation.Infrastructure.Repositories
 
         public async Task<Property> AddAsync(Property property)
         {
-            var propertyResult = await _context.Properties.AddAsync(property);
+            await _context.Properties.AddAsync(property);
             await _context.SaveChangesAsync();
-            return propertyResult.Entity;
+            return property;
         }
 
         public async Task UpdateAsync(Property property)
