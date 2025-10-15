@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PropertyReservation.Domain.Entities
 {
-    public class Servicio
+    public class Amenity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
