@@ -8,9 +8,7 @@ namespace PropertyReservation.Infrastructure.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-           
         }
-        
         public DbSet<User> Users { get; set; }
         public DbSet<Property> Properties { get; set; }
         public DbSet<PropertyImage> PropertyImages { get; set; }
@@ -24,23 +22,6 @@ namespace PropertyReservation.Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             modelBuilder.Entity<Property>().OwnsOne(p => p.Address);
             modelBuilder.Entity<User>().OwnsOne(u => u.Address);
-
-            /* modelBuilder.Entity<Property>().HasData(
-                new
-                {
-                    Title = "Casa de prueba en la playa",
-                    Description = "Hermosa casa frente al mar con pileta y parrilla.",
-                    NightlyPrice = 15000m,
-                    MaxGuests = 4,
-                    Bedrooms = 2,
-                    Bathrooms = 1,
-                    UserId = 1,
-                    Address_City = "Mar del Plata",
-                    Address_State = "Buenos Aires",
-                    Address_Country = "Argentina",
-                    Address_StreetAddress = "Av. Costanera 1234"
-                }
-            );*/
 
             // Índice único filtrado: solo una imagen principal por property
             modelBuilder.Entity<PropertyImage>()
@@ -56,6 +37,30 @@ namespace PropertyReservation.Infrastructure.Data
                         .OnDelete(DeleteBehavior.Restrict); // o DeleteBehavior.NoAction
             
             base.OnModelCreating(modelBuilder);
+
+            // Datos iniciales de servicios populares
+            modelBuilder.Entity<Amenity>().HasData(
+                new Amenity { Id = 1, Name = "Wi-Fi" },
+                new Amenity { Id = 2, Name = "Aire acondicionado" },
+                new Amenity { Id = 3, Name = "Calefacción" },
+                new Amenity { Id = 4, Name = "Televisor" },
+                new Amenity { Id = 5, Name = "Cocina equipada" },
+                new Amenity { Id = 6, Name = "Heladera" },
+                new Amenity { Id = 7, Name = "Microondas" },
+                new Amenity { Id = 8, Name = "Lavarropas" },
+                new Amenity { Id = 9, Name = "Piscina" },
+                new Amenity { Id = 10, Name = "Estacionamiento gratuito" },
+                new Amenity { Id = 11, Name = "Gimnasio" },
+                new Amenity { Id = 12, Name = "Jacuzzi" },
+                new Amenity { Id = 13, Name = "Balcón o terraza" },
+                new Amenity { Id = 14, Name = "Vista al mar" },
+                new Amenity { Id = 15, Name = "Parrilla" },
+                new Amenity { Id = 16, Name = "Mascotas permitidas" },
+                new Amenity { Id = 17, Name = "Desayuno incluido" },
+                new Amenity { Id = 18, Name = "Acceso a playa" },
+                new Amenity { Id = 19, Name = "Caja fuerte" },
+                new Amenity { Id = 20, Name = "Cámaras de seguridad" }
+            );
 
         }
 

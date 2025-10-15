@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PropertyReservation.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class NewMigratio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +19,7 @@ namespace PropertyReservation.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,6 +172,33 @@ namespace PropertyReservation.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Amenities",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Wi-Fi" },
+                    { 2, "Aire acondicionado" },
+                    { 3, "Calefacción" },
+                    { 4, "Televisor" },
+                    { 5, "Cocina equipada" },
+                    { 6, "Heladera" },
+                    { 7, "Microondas" },
+                    { 8, "Lavarropas" },
+                    { 9, "Piscina" },
+                    { 10, "Estacionamiento gratuito" },
+                    { 11, "Gimnasio" },
+                    { 12, "Jacuzzi" },
+                    { 13, "Balcón o terraza" },
+                    { 14, "Vista al mar" },
+                    { 15, "Parrilla" },
+                    { 16, "Mascotas permitidas" },
+                    { 17, "Desayuno incluido" },
+                    { 18, "Acceso a playa" },
+                    { 19, "Caja fuerte" },
+                    { 20, "Cámaras de seguridad" }
                 });
 
             migrationBuilder.CreateIndex(
