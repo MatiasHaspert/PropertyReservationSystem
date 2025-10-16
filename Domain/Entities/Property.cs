@@ -28,6 +28,5 @@ namespace PropertyReservation.Domain.Entities
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
         public ICollection<PropertyAvailability> Availabilities { get; set; } = new List<PropertyAvailability>();
-
     }
 }

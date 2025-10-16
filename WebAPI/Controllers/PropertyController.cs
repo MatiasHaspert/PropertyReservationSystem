@@ -9,6 +9,7 @@ using PropertyReservation.Application.Interfaces;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Infrastructure.Data;
 using PropertyReservation.Application.DTOs.Property;
+using System.Runtime.CompilerServices;
 
 namespace PropertyReservation.WebAPI.Controllers
 {
@@ -17,10 +18,11 @@ namespace PropertyReservation.WebAPI.Controllers
     public class PropertyController : ControllerBase
     {
         private readonly IPropertyService _PropertyService;
-
-        public PropertyController(IPropertyService PropertyService)
+        private readonly IPropertyImageService _ImageService;
+        public PropertyController(IPropertyService PropertyService, IPropertyImageService imageService)
         {
             _PropertyService = PropertyService;
+            _ImageService = imageService;
         }
 
         // GET: api/Property
@@ -83,5 +85,53 @@ namespace PropertyReservation.WebAPI.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id}/images")]
+        public async Task<IActionResult> UploadImages(int id, List<IFormFile> files)
+        {
+            try
+            {
+                var images = await _ImageService.UploadPropertyImagesAsync(id, files, Request);
+                return Ok(images);
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+
+        }
+
+        [HttpGet("{id}/images")]
+        public async Task<IActionResult> GetImages(int id)
+        {
+            try
+            {
+                var images = await _ImageService.GetImagesByPropertyAsync(id);
+                return Ok(images);
+            }
+            catch(ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("images/{imageId}")]
+        public async Task<IActionResult> DeleteImage(int imageId)
+        {
+            try
+            {
+                await _ImageService.DeleteImageAsync(imageId);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

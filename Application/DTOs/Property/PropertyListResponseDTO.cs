@@ -1,4 +1,6 @@
-﻿namespace PropertyReservation.Application.DTOs.Property
+﻿using PropertyReservation.Application.DTOs.PropertyImage;
+
+namespace PropertyReservation.Application.DTOs.Property
 {
     public class PropiedadListResponseDTO
     {
@@ -11,6 +13,6 @@
         public decimal AverageRating { get; set; } // Calificación promedio de reseñas
         public AddressDTO Address { get; set; } = new AddressDTO();
         // Imagen principal de la property
-        //public string ImagenPrincipal { get; set; } = string.Empty;
+        // public PropertyImageResponseDTO? MainImage { get; set; } 
     }
 }

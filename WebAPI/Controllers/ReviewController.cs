@@ -35,8 +35,8 @@ namespace PropertyReservation.WebAPI.Controllers
             return Ok(Reviews);
         }
 
-        
-        // GET: api/Review/5
+
+        // GET: api/Review/5?propertyId=5
         [HttpGet("{id}")]
         public async Task<ActionResult<ReviewResponseDTO>> GetReview(int id, [FromQuery] int propertyId)
         {

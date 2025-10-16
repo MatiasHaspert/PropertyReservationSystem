@@ -55,7 +55,7 @@ namespace PropertyReservation.Application.Services
 
         public bool PropertyExists(int id)
         {
-            return _propertyRepository.Exists(id);
+            throw new NotImplementedException();
         }
 
         // Posibilidad de luego usar AutoMapper

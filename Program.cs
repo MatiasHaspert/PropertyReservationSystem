@@ -9,13 +9,19 @@ using PropertyReservation.Application.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
  
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString)
     );
 
+
+
+
 // Inject dependencies
+builder.Services.AddScoped<IPropertyImageRepository, PropertyImageRepository>();
+builder.Services.AddScoped<IPropertyImageService, PropertyImageService>();
+builder.Services.AddScoped<IPropertyAvailabilityRespository, PropertyAvailabilityRepository>();
+builder.Services.AddScoped<IPropertyAvailabilityService, PropertyAvailabilityService>();
 builder.Services.AddScoped<IAmenityRepository, AmenityRespository>();
 builder.Services.AddScoped<IAmenityService, AmenityService>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -41,5 +47,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles(); // Habilitar el servir archivos estaticos desde wwwroot
 
 app.Run();

@@ -1,4 +1,8 @@
-﻿namespace PropertyReservation.Application.DTOs.Property
+﻿using PropertyReservation.Application.DTOs.Amenity;
+using PropertyReservation.Application.DTOs.PropertyImage;
+using PropertyReservation.Application.DTOs.Review;
+
+namespace PropertyReservation.Application.DTOs.Property
 {
     public class PropertyDetailResponseDTO
     {
@@ -14,8 +18,8 @@
         // Luego UserDTO, anfitrion
         //public UserDTO Anfitrion { get; set; } = new UserDTO();
         // Luego van los dtos de Amenities, Images y Reviews
-        public List<string> Amenities { get; set; } = new List<string>();
-        public List<string> Images { get; set; } = new List<string>();
-        public List<string> Reviews { get; set; } = new List<string>();
+        public List<AmenityResponseDTO> Amenities { get; set; } = new List<AmenityResponseDTO>();
+        public List<PropertyImageResponseDTO> Images { get; set; } = new List<PropertyImageResponseDTO>();
+        public List<ReviewResponseDTO> Reviews { get; set; } = new List<ReviewResponseDTO>();
     }
 }

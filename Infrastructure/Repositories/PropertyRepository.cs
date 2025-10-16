@@ -45,9 +45,9 @@ namespace PropertyReservation.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-        public bool Exists(int id)
+        public async Task<bool> PropertyExistsAsync(int id)
         {
-            return _context.Properties.Any(e => e.Id == id);
+            return await _context.Properties.AnyAsync(e => e.Id == id);
         }
     }
 }
