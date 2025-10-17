@@ -10,9 +10,8 @@ namespace PropertyReservation.Application.DTOs.Property
         public int MaxGuests { get; set; }
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
-        public decimal AverageRating { get; set; } // Calificación promedio de reseñas
+        public decimal AverageRating { get; set; } 
         public AddressDTO Address { get; set; } = new AddressDTO();
-        // Imagen principal de la property
-        // public PropertyImageResponseDTO? MainImage { get; set; } 
+        public PropertyImageResponseDTO? MainImage { get; set; } 
     }
 }

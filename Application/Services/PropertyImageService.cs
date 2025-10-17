@@ -1,4 +1,5 @@
-﻿using PropertyReservation.Application.Interfaces;
+﻿using PropertyReservation.Application.DTOs.PropertyImage;
+using PropertyReservation.Application.Interfaces;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Domain.Interfaces;
 
@@ -20,17 +21,18 @@ namespace PropertyReservation.Application.Services
             _environment = webHostEnvironment;
         }
 
-        public async Task<IEnumerable<PropertyImage>> GetImagesByPropertyAsync(int propertyId)
+        public async Task<IEnumerable<PropertyImageResponseDTO>> GetImagesByPropertyAsync(int propertyId)
         {
             var propertyExists = await _propertyRepository.PropertyExistsAsync(propertyId);
             if (!propertyExists)
             {
                 throw new ArgumentException("La propiedad no existe.");
             }
-            return await _propertyImageRepository.GetPropertyImagesByPropertyIdAsync(propertyId);
+            var images = await _propertyImageRepository.GetPropertyImagesByPropertyIdAsync(propertyId);
+            return images.Select(img => MapPropertyImageToDTO(img)).ToList();
         }
 
-        public async Task<List<PropertyImage>> UploadPropertyImagesAsync(int propertyId, List<IFormFile> files, HttpRequest request)
+        public async Task<List<PropertyImageResponseDTO>> UploadPropertyImagesAsync(int propertyId, List<IFormFile> files, HttpRequest request)
         {
             var property = await _propertyRepository.GetByIdAsync(propertyId);
             if (property == null)
@@ -82,8 +84,8 @@ namespace PropertyReservation.Application.Services
             }
 
             await _propertyImageRepository.AddRangePropertyImageAsync(uploadedImages);
-
-            return uploadedImages;
+            var propertyImagesDTOs =  uploadedImages.Select(pi => MapPropertyImageToDTO(pi)).ToList();
+            return propertyImagesDTOs;
         }
 
         public async Task DeleteImageAsync(int imageId)
@@ -101,6 +103,44 @@ namespace PropertyReservation.Application.Services
                 File.Delete(physicalPath);
             }
             await _propertyImageRepository.DeletePropertyImageAsync(image);
+        }
+
+        public async Task<PropertyImageResponseDTO> SetMainImageAsync(int propertyId, int imageId)
+        {
+            if (!await _propertyRepository.PropertyExistsAsync(propertyId))
+                throw new KeyNotFoundException("La propiedad no existe.");
+
+            var images = await _propertyImageRepository.GetPropertyImagesByPropertyIdAsync(propertyId);
+            if (images == null || !images.Any())
+                throw new InvalidOperationException("No hay imágenes asociadas a esta propiedad.");
+
+            var newMain = images.FirstOrDefault(i => i.Id == imageId);
+            if (newMain == null)
+                throw new KeyNotFoundException("La imagen especificada no pertenece a esta propiedad.");
+
+            // Desactivar la anterior principal (si existía)
+            foreach (var img in images)
+            {
+                // Solo una imagen será principal (la que coincida con imageId)
+                img.IsMainImage = img.Id == imageId;
+            }
+
+            await _propertyImageRepository.UpdateRangeAsync(images);
+
+            return MapPropertyImageToDTO(newMain);
+        }
+
+
+        private PropertyImageResponseDTO MapPropertyImageToDTO(PropertyImage image)
+        {
+            return new PropertyImageResponseDTO
+            {
+                Id = image.Id,
+                PropertyId = image.PropertyId,
+                Url = image.Url,
+                IsMainImage = image.IsMainImage,
+                CreatedAt = image.CreationDate
+            };
         }
     }
 }

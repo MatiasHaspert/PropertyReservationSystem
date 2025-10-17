@@ -40,5 +40,11 @@ namespace PropertyReservation.Infrastructure.Repositories
         {
             return await _context.PropertyImages.FindAsync(imageId);
         }
+
+        public async Task UpdateRangeAsync(IEnumerable<PropertyImage> images)
+        {
+            _context.PropertyImages.UpdateRange(images);
+            await _context.SaveChangesAsync();
+        }
     }
 }

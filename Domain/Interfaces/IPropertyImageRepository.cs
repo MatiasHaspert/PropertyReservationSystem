@@ -7,8 +7,7 @@ namespace PropertyReservation.Domain.Interfaces
         Task AddRangePropertyImageAsync(IEnumerable<PropertyImage> images);
         Task<IEnumerable<PropertyImage>> GetPropertyImagesByPropertyIdAsync(int propertyId);
         Task DeletePropertyImageAsync(PropertyImage image);
-
         Task<PropertyImage?> GetPropertyImageByIdAsync(int imageId);
-
+        Task UpdateRangeAsync(IEnumerable<PropertyImage> images);
     }
 }

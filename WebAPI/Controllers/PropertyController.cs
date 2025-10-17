@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PropertyReservation.Application.DTOs.Property;
 using PropertyReservation.Application.Interfaces;
+using PropertyReservation.Application.Services;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Infrastructure.Data;
-using PropertyReservation.Application.DTOs.Property;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace PropertyReservation.WebAPI.Controllers
 {
@@ -19,7 +20,9 @@ namespace PropertyReservation.WebAPI.Controllers
     {
         private readonly IPropertyService _PropertyService;
         private readonly IPropertyImageService _ImageService;
-        public PropertyController(IPropertyService PropertyService, IPropertyImageService imageService)
+        public PropertyController(
+            IPropertyService PropertyService, 
+            IPropertyImageService imageService)
         {
             _PropertyService = PropertyService;
             _ImageService = imageService;
@@ -92,8 +95,6 @@ namespace PropertyReservation.WebAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            
-
         }
 
         [HttpGet("{id}/images")]
@@ -121,6 +122,24 @@ namespace PropertyReservation.WebAPI.Controllers
             catch (ArgumentException ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPut("{propertyId}/images/{imageId}/main")]
+        public async Task<IActionResult> SetMainImage(int propertyId, int imageId)
+        {
+            try
+            {
+                var result = await _ImageService.SetMainImageAsync(propertyId, imageId);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
             }
         }
     }

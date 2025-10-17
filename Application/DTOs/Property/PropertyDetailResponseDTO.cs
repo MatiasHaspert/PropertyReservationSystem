@@ -17,7 +17,6 @@ namespace PropertyReservation.Application.DTOs.Property
         public decimal AverageRating { get; set; } // Calificación promedio de reseñas
         // Luego UserDTO, anfitrion
         //public UserDTO Anfitrion { get; set; } = new UserDTO();
-        // Luego van los dtos de Amenities, Images y Reviews
         public List<AmenityResponseDTO> Amenities { get; set; } = new List<AmenityResponseDTO>();
         public List<PropertyImageResponseDTO> Images { get; set; } = new List<PropertyImageResponseDTO>();
         public List<ReviewResponseDTO> Reviews { get; set; } = new List<ReviewResponseDTO>();

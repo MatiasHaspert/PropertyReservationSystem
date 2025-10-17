@@ -5,6 +5,8 @@
         public int Id { get; set; }                
         public string Url { get; set; } = string.Empty;  
         public bool IsMainImage { get; set; }       
-        public DateTime CreatedAt { get; set; }      
+        public DateTime CreatedAt { get; set; }    
+        public int PropertyId { get; set; }
+
     }
 }
