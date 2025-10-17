@@ -27,7 +27,6 @@ namespace PropertyReservation.Application.Services
             if (!propertyExists)
                 throw new InvalidOperationException("No se puede crear la disponibilidad: la propiedad no existe.");
 
-
             // Verificar solapamiento de fechas
             var hasOverlap = await _availabilityRepository.HasOverlappingAvailabilityAsyncCreate(availabilityDto);
             if (hasOverlap)
@@ -48,6 +47,9 @@ namespace PropertyReservation.Application.Services
 
         public async Task<IEnumerable<PropertyAvailabilityResponseDTO>> GetPropertyAvailabilitiesAsync(int propertyId)
         {
+            if (!await _propertyRepository.PropertyExistsAsync(propertyId))
+                throw new ArgumentException("La propiedad indicada no existe.");
+
             var availabilities = await _availabilityRepository.GetPropertyAvailabilitiesAsync(propertyId);
             return availabilities.Select(a => MapPropertyAvailabilityToDTO(a)).ToList();
         }
@@ -55,6 +57,11 @@ namespace PropertyReservation.Application.Services
         public async Task UpdatePropertyAvailabilityAsync(int availabilityId, PropertyAvailabilityRequestDTO availabilityDto)
         {
             ValidateAvailabilityDates(availabilityDto.StartDate, availabilityDto.EndDate);
+
+            // Verificar existencia de la disponibilidad
+            var availabilityExists = await _availabilityRepository.PropertyAvailabilityExistsAsync(availabilityId);
+            if (!availabilityExists)
+                throw new ArgumentException("La disponibilidad indicada no existe.");
 
             // Verificar existencia de la propiedad
             var propertyExists = await _propertyRepository.PropertyExistsAsync(availabilityDto.PropertyId);

@@ -28,7 +28,14 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PropertyAvailabilityResponseDTO>>> GetPropertyAvailabilities([FromQuery] int propertyId)
         {
-            return Ok(await _propertyAvailabilityService.GetPropertyAvailabilitiesAsync(propertyId));
+            try
+            {
+                return Ok(await _propertyAvailabilityService.GetPropertyAvailabilitiesAsync(propertyId));
+            }
+            catch(ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // PUT: api/PropertyAvailability/5

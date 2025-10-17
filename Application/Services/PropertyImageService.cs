@@ -22,11 +22,11 @@ namespace PropertyReservation.Application.Services
 
         public async Task<IEnumerable<PropertyImage>> GetImagesByPropertyAsync(int propertyId)
         {
-            if (!await _propertyRepository.PropertyExistsAsync(propertyId))
+            var propertyExists = await _propertyRepository.PropertyExistsAsync(propertyId);
+            if (!propertyExists)
             {
                 throw new ArgumentException("La propiedad no existe.");
             }
-
             return await _propertyImageRepository.GetPropertyImagesByPropertyIdAsync(propertyId);
         }
 

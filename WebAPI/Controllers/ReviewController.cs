@@ -27,8 +27,15 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReviewResponseDTO>>> GetPropertyReviews([FromQuery] int propertyId)
         {
-            var reviews = await _ReviewService.GetPropertyReviewsAsync(propertyId);
-            return Ok(reviews);
+            try
+            {
+                var reviews = await _ReviewService.GetPropertyReviewsAsync(propertyId);
+                return Ok(reviews);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // GET: api/Review/5?propertyId=5
@@ -51,25 +58,45 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutReview(int id, ReviewRequestDTO reviewRequestDTO)
         {
-            await _ReviewService.UpdateReviewAsync(id, reviewRequestDTO);
-            
-            return NoContent();
+            try
+            {
+                await _ReviewService.UpdateReviewAsync(id, reviewRequestDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // POST: api/Review
         [HttpPost]
         public async Task<ActionResult<ReviewResponseDTO>> PostReview(ReviewRequestDTO reviewRequestDTO)
         {
-            var createdReview = await _ReviewService.CreateReviewAsync(reviewRequestDTO);
-            return CreatedAtAction("GetReview", new { id = createdReview.Id, propertyId = createdReview.PropertyId }, createdReview);
+            try
+            {
+                var createdReview = await _ReviewService.CreateReviewAsync(reviewRequestDTO);
+                return CreatedAtAction("GetReview", new { id = createdReview.Id, propertyId = createdReview.PropertyId }, createdReview);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // DELETE: api/Review/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            await _ReviewService.DeleteReviewAsync(id);
-            return NoContent();
+            try
+            {
+                await _ReviewService.DeleteReviewAsync(id);
+                return NoContent();
+            }
+            catch(KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

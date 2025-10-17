@@ -22,7 +22,8 @@ namespace PropertyReservation.Application.Services
 
         public async Task DeleteAmenityAsync(int amenityId)
         {
-            if(!await _amenityRepository.AmenityExistsAsync(amenityId))
+            var amenityExists = await _amenityRepository.AmenityExistsAsync(amenityId);
+            if (!amenityExists)
             {
                 throw new ArgumentException("Servicio no encontrado.");
             }
@@ -37,7 +38,8 @@ namespace PropertyReservation.Application.Services
 
         public async Task UpdateAmenityAsync(int amenityId, AmenityRequestDTO amenityRequestDTO)
         {
-            if (!await _amenityRepository.AmenityExistsAsync(amenityId))
+            var amenityExists = await _amenityRepository.AmenityExistsAsync(amenityId);
+            if (!amenityExists)
             {
                 throw new ArgumentException("Servicio no encontrado.");
             }
