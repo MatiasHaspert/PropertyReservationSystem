@@ -18,7 +18,7 @@ namespace PropertyReservation.Infrastructure.Repositories
         {
             await _context.Reviews.AddAsync(review);
             await _context.SaveChangesAsync();
-            return review; // <- Retornar el objeto original
+            return review; 
         }
 
         public async Task<Review?> GetPropertyReviewByIdAsync(int propertyId, int reviewId)
@@ -51,9 +51,9 @@ namespace PropertyReservation.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-        public bool ReviewExists(int reviewId)
+        public async Task<bool> ReviewExistsAsync(int reviewId)
         {
-            return _context.Reviews.Any(e => e.Id == reviewId);
+            return await _context.Reviews.AnyAsync(e => e.Id == reviewId);
         }
     }
 }

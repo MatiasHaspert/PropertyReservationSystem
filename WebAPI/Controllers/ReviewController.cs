@@ -27,27 +27,23 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReviewResponseDTO>>> GetPropertyReviews([FromQuery] int propertyId)
         {
-            var Reviews = await _ReviewService.GetPropertyReviewsAsync(propertyId);
-
-            if (Reviews == null)
-                return NotFound($"No se encontraron Reviews para la property con ID {propertyId}.");
-
-            return Ok(Reviews);
+            var reviews = await _ReviewService.GetPropertyReviewsAsync(propertyId);
+            return Ok(reviews);
         }
-
 
         // GET: api/Review/5?propertyId=5
         [HttpGet("{id}")]
         public async Task<ActionResult<ReviewResponseDTO>> GetReview(int id, [FromQuery] int propertyId)
         {
-            var review = await _ReviewService.GetPropertyReviewByIdAsync(propertyId, id);
-
-            if (review == null)
+            try
             {
-                return NotFound();
+                var review = await _ReviewService.GetPropertyReviewByIdAsync(propertyId, id);
+                return Ok(review);
             }
-
-            return review;
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         
@@ -55,11 +51,8 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutReview(int id, ReviewRequestDTO reviewRequestDTO)
         {
-            var result = await _ReviewService.UpdateReviewAsync(id, reviewRequestDTO);
-            if (!result)
-            {
-                return NotFound();
-            }
+            await _ReviewService.UpdateReviewAsync(id, reviewRequestDTO);
+            
             return NoContent();
         }
 
@@ -75,13 +68,7 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            var result = await _ReviewService.DeleteReviewAsync(id);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
+            await _ReviewService.DeleteReviewAsync(id);
             return NoContent();
         }
     }

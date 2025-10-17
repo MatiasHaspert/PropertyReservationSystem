@@ -33,12 +33,15 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAmenity(int id, AmenityRequestDTO amenity)
         {
-            var result = await _amenityService.UpdateAmenityAsync(id, amenity);
-            if (!result)
+            try
+            {
+                await _amenityService.UpdateAmenityAsync(id, amenity);
+                return NoContent();
+            }
+            catch (ArgumentException)
             {
                 return NotFound();
             }
-            return NoContent();
         }
 
         // POST: api/Amenity
@@ -52,12 +55,15 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAmenity(int id)
         {
-            var result = await _amenityService.DeleteAmenityAsync(id);
-            if (!result)
+            try
+            {
+                await _amenityService.DeleteAmenityAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException)
             {
                 return NotFound();
             }
-            return NoContent();
         }
     }
 }

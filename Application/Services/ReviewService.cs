@@ -23,38 +23,38 @@ namespace PropertyReservation.Application.Services
         public async Task<ReviewResponseDTO> GetPropertyReviewByIdAsync(int propertyId, int reviewId)
         {
             var review = await _reviewRepository.GetPropertyReviewByIdAsync(propertyId, reviewId);
-            return review == null ? null : MapReviewToDTO(review);
+            if (review == null)
+            {
+                throw new KeyNotFoundException("ID no encontrado.");
+            }
+            return MapReviewToDTO(review);
         }
 
         public async Task<IEnumerable<ReviewResponseDTO>> GetPropertyReviewsAsync(int propertyId)
         {
             var reviews = await _reviewRepository.GetPropertyReviewsAsync(propertyId);
-
             return reviews.Select(r => MapReviewToDTO(r)).ToList();
         }
 
-
-        public async Task<bool> UpdateReviewAsync(int reviewId, ReviewRequestDTO reviewRequestDTO)
+        public async Task UpdateReviewAsync(int reviewId, ReviewRequestDTO reviewRequestDTO)
         {
-            if(!_reviewRepository.ReviewExists(reviewId))
+            if(! await _reviewRepository.ReviewExistsAsync(reviewId))
             {
-                return false;
+                throw new KeyNotFoundException("Reseña no encontrada.");
             }
             var review = MapDTOToReview(reviewRequestDTO);
-            review.Id = reviewId; // Ensure the ID is set for the update
+            review.Id = reviewId; 
             await _reviewRepository.UpdateReviewAsync(review);
-            return true;
         }
 
-        public async Task<bool> DeleteReviewAsync(int reviewId)
+        public async Task DeleteReviewAsync(int reviewId)
         {
-            if(!_reviewRepository.ReviewExists(reviewId))
+            if(!await _reviewRepository.ReviewExistsAsync(reviewId))
             {
-                return false;
+                throw new KeyNotFoundException("Reseña no encontrada.");
             }
 
             await _reviewRepository.DeleteAsync(reviewId);
-            return true;
         }
 
         private ReviewResponseDTO MapReviewToDTO(Review review)

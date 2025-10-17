@@ -52,12 +52,7 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProperty(int id, PropertyRequestDTO property)
         {
-            var result = await _PropertyService.PutPropertyAsync(id, property);
-
-            if (!result)
-            {
-                return BadRequest();
-            }
+            await _PropertyService.PutPropertyAsync(id, property);
 
             return NoContent();
         }
@@ -75,13 +70,8 @@ namespace PropertyReservation.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProperty(int id)
         {
-            var result = await _PropertyService.DeletePropertyAsync(id);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
+            await _PropertyService.DeletePropertyAsync(id);
+          
             return NoContent();
         }
 

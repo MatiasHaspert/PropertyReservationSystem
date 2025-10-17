@@ -7,7 +7,7 @@ namespace PropertyReservation.Application.Interfaces
     {
         Task<IEnumerable<AmenityResponseDTO>> GetAllAmenitiesAsync();
         Task<AmenityResponseDTO> CreateAmenityAsync(AmenityRequestDTO amenityRequestDTO);
-        Task<bool> UpdateAmenityAsync(int amenityId, AmenityRequestDTO amenityRequestDTO);
-        Task<bool> DeleteAmenityAsync(int amenityId);
+        Task UpdateAmenityAsync(int amenityId, AmenityRequestDTO amenityRequestDTO);
+        Task DeleteAmenityAsync(int amenityId);
     }
 }

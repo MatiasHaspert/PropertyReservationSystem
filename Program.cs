@@ -15,8 +15,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     );
 
 
-
-
 // Inject dependencies
 builder.Services.AddScoped<IPropertyImageRepository, PropertyImageRepository>();
 builder.Services.AddScoped<IPropertyImageService, PropertyImageService>();

@@ -14,9 +14,9 @@ namespace PropertyReservation.Infrastructure.Repositories
             _context = context;
         }
 
-        public bool AmenityExists(int amenityId)
+        public async Task<bool> AmenityExistsAsync(int amenityId)
         {
-            return _context.Amenities.Any(a => a.Id == amenityId);
+            return await _context.Amenities.AnyAsync(a => a.Id == amenityId);
         }
 
         public async Task<Amenity> CreateAmenityAsync(Amenity amenity)

@@ -6,9 +6,8 @@ namespace PropertyReservation.Application.Interfaces
     {
         Task<IEnumerable<ReviewResponseDTO>> GetPropertyReviewsAsync(int propertyId);
         Task<ReviewResponseDTO> GetPropertyReviewByIdAsync(int propertyId, int reviewId);
-
         Task<ReviewResponseDTO> CreateReviewAsync(ReviewRequestDTO reviewRequestDTO);
-        Task<bool> UpdateReviewAsync(int reviewId, ReviewRequestDTO reviewRequestDTO);
-        Task<bool> DeleteReviewAsync(int reviewId);
+        Task UpdateReviewAsync(int reviewId, ReviewRequestDTO reviewRequestDTO);
+        Task DeleteReviewAsync(int reviewId);
     }
 }

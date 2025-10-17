@@ -8,6 +8,6 @@ namespace PropertyReservation.Domain.Interfaces
         Task<Amenity> CreateAmenityAsync(Amenity amenity);
         Task UpdateAmenityAsync(Amenity amenity);
         Task DeleteAsync(int amenityId);
-        bool AmenityExists(int amenityId);
+        Task<bool> AmenityExistsAsync(int amenityId);
     }
 }

@@ -8,6 +8,6 @@ namespace PropertyReservation.Domain.Interfaces
         Task<Review> CreateReviewAsync(Review review);
         Task UpdateReviewAsync(Review review);
         Task DeleteAsync(int reviewId);
-        bool ReviewExists(int reviewId);
+        Task<bool> ReviewExistsAsync(int reviewId);
     }
 }

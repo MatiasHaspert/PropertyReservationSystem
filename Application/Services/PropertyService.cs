@@ -3,6 +3,7 @@ using PropertyReservation.Domain.Interfaces;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Domain.ValueObjects;
 using PropertyReservation.Application.DTOs.Property;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace PropertyReservation.Application.Services
 {
@@ -22,19 +23,17 @@ namespace PropertyReservation.Application.Services
 
         public async Task<Property> GetPropertyByIdAsync(int id)
         {
-            
             return await _propertyRepository.GetByIdAsync(id);
         }
 
-        public async Task<bool> PutPropertyAsync(int id, PropertyRequestDTO propertyDTO)
+        public async Task PutPropertyAsync(int id, PropertyRequestDTO propertyDTO)
         {
-            if (!PropertyExists(id))
+            if (!await PropertyExistsAsync(id))
             {
-                return false;
+                throw new KeyNotFoundException("Propiedad no encontrada.");
             }
             Property property = mapearDtoProperty(propertyDTO);
             await _propertyRepository.UpdateAsync(property);
-            return true;
         }
 
         public async Task<Property> CreatePropertyAsync(PropertyRequestDTO propertyDTO)
@@ -43,19 +42,18 @@ namespace PropertyReservation.Application.Services
             return await _propertyRepository.AddAsync(property);
         }
 
-        public async Task<bool> DeletePropertyAsync(int id)
+        public async Task DeletePropertyAsync(int id)
         {
-            if (!PropertyExists(id))
+            if (!await PropertyExistsAsync(id))
             {
-                return false;
+                throw new KeyNotFoundException("Propiedad no encontrada.");
             }
             await _propertyRepository.DeleteAsync(id);
-            return true;
         }
 
-        public bool PropertyExists(int id)
+        public async Task<bool> PropertyExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _propertyRepository.PropertyExistsAsync(id);
         }
 
         // Posibilidad de luego usar AutoMapper
