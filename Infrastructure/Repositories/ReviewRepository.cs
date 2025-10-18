@@ -14,13 +14,6 @@ namespace PropertyReservation.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Review> CreateReviewAsync(Review review)
-        {
-            await _context.Reviews.AddAsync(review);
-            await _context.SaveChangesAsync();
-            return review; 
-        }
-
         public async Task<Review?> GetPropertyReviewByIdAsync(int propertyId, int reviewId)
         {
             return await _context.Reviews
@@ -34,6 +27,13 @@ namespace PropertyReservation.Infrastructure.Repositories
                 .ToListAsync();
 
             return Reviews;
+        }
+
+        public async Task<Review> CreateReviewAsync(Review review)
+        {
+            await _context.Reviews.AddAsync(review);
+            await _context.SaveChangesAsync();
+            return review; 
         }
 
         public async Task UpdateReviewAsync(Review review)
@@ -51,6 +51,7 @@ namespace PropertyReservation.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task<bool> ReviewExistsAsync(int reviewId)
         {
             return await _context.Reviews.AnyAsync(e => e.Id == reviewId);
