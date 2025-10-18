@@ -19,7 +19,5 @@ namespace PropertyReservation.Application.DTOs
         [Required(ErrorMessage = "El código postal debe ser obligatorio")]
         [Range(1, 99999, ErrorMessage = "El código postal debe estar entre 1 y 99999.")]
         public int PostalCode { get; set; }
-
-        public AddressDTO() { }
     }
 }

@@ -30,7 +30,7 @@ namespace PropertyReservation.Application.Services
             await _amenityRepository.DeleteAsync(amenityId);
         }
 
-        public async Task<IEnumerable<AmenityResponseDTO>> GetAllAmenitiesAsync()
+        public async Task<ICollection<AmenityResponseDTO>> GetAllAmenitiesAsync()
         {
             var amenities = await _amenityRepository.GetAllAmenitiesAsync();
             return amenities.Select(a => MapAmenityToDto(a)).ToList();

@@ -14,9 +14,16 @@ namespace PropertyReservation.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<bool> AmenityExistsAsync(int amenityId)
+        public async Task<IEnumerable<Amenity>> GetAllAmenitiesAsync()
         {
-            return await _context.Amenities.AnyAsync(a => a.Id == amenityId);
+            return await _context.Amenities.ToListAsync();
+        }
+
+        public async Task<ICollection<Amenity>> GetAmenitiesByIdsAsync(ICollection<int> amenityIds)
+        {
+            return await _context.Amenities
+                .Where(a => amenityIds.Contains(a.Id))
+                .ToListAsync();
         }
 
         public async Task<Amenity> CreateAmenityAsync(Amenity amenity)
@@ -24,6 +31,12 @@ namespace PropertyReservation.Infrastructure.Repositories
             await _context.Amenities.AddAsync(amenity);
             await _context.SaveChangesAsync();
             return amenity;
+        }
+
+        public async Task UpdateAmenityAsync(Amenity amenity)
+        {
+            _context.Amenities.Update(amenity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int amenityId)
@@ -36,15 +49,10 @@ namespace PropertyReservation.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<Amenity>> GetAllAmenitiesAsync()
-        {
-            return await _context.Amenities.ToListAsync();
-        }
 
-        public async Task UpdateAmenityAsync(Amenity amenity)
+        public async Task<bool> AmenityExistsAsync(int amenityId)
         {
-            _context.Amenities.Update(amenity);
-            await _context.SaveChangesAsync();
+            return await _context.Amenities.AnyAsync(a => a.Id == amenityId);
         }
     }
 }

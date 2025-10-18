@@ -19,7 +19,7 @@ namespace PropertyReservation.Infrastructure.Repositories
             return await _context.Properties.ToListAsync();
         }
 
-        public async Task<Property> GetByIdAsync(int id)
+        public async Task<Property?> GetByIdAsync(int id)
         {
             return await _context.Properties.FindAsync(id);
         }

@@ -12,8 +12,8 @@ using PropertyReservation.Infrastructure.Data;
 namespace PropertyReservation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251015223630_NewMigratio")]
-    partial class NewMigratio
+    [Migration("20251018175852_ChangeOwner")]
+    partial class ChangeOwner
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,16 +184,16 @@ namespace PropertyReservation.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Properties");
                 });
@@ -336,9 +336,9 @@ namespace PropertyReservation.Migrations
 
             modelBuilder.Entity("PropertyReservation.Domain.Entities.Property", b =>
                 {
-                    b.HasOne("PropertyReservation.Domain.Entities.User", "User")
+                    b.HasOne("PropertyReservation.Domain.Entities.User", "Owner")
                         .WithMany("Properties")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -377,7 +377,7 @@ namespace PropertyReservation.Migrations
                     b.Navigation("Address")
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("PropertyReservation.Domain.Entities.PropertyAvailability", b =>

@@ -19,7 +19,8 @@ namespace PropertyReservation.Domain.Entities
         [MaxLength(20)]
         public string Phone { get; set; } = string.Empty;
         // Roles
-        public ICollection<Property> Properties { get; set; } = new List<Property>();
+        // Investigar cómo vincularlo con el campo de las properties y reactivar
+        // public ICollection<Property> Properties { get; set; } = new List<Property>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

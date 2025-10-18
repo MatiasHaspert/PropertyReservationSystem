@@ -37,11 +37,34 @@ namespace PropertyReservation.WebAPI.Controllers
             return Ok(propertyes);
         }
 
+        // GET: api/Property/list
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<PropertyListResponseDTO>>> GetPropertyList()
+        {
+            IEnumerable<PropertyListResponseDTO> propertyes = await _PropertyService.GetPropertyListAsync();
+
+            return Ok(propertyes);
+        }
+
         // GET: api/Property/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Property>> GetProperty(int id)
         {
             var property = await _PropertyService.GetPropertyByIdAsync(id);
+
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            return property;
+        }
+
+        // GET: api/Property/detail/5
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult<PropertyDetailsResponseDTO>> GetPropertyDetails(int id)
+        {
+            var property = await _PropertyService.GetPropertyDetailsByIdAsync(id);
 
             if (property == null)
             {

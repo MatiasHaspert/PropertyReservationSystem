@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PropertyReservation.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PropertyReservation.Infrastructure.Data;
 namespace PropertyReservation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251018124924_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,16 +184,16 @@ namespace PropertyReservation.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Properties");
                 });
@@ -333,9 +336,9 @@ namespace PropertyReservation.Migrations
 
             modelBuilder.Entity("PropertyReservation.Domain.Entities.Property", b =>
                 {
-                    b.HasOne("PropertyReservation.Domain.Entities.User", "Owner")
+                    b.HasOne("PropertyReservation.Domain.Entities.User", "User")
                         .WithMany("Properties")
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -374,7 +377,7 @@ namespace PropertyReservation.Migrations
                     b.Navigation("Address")
                         .IsRequired();
 
-                    b.Navigation("Owner");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PropertyReservation.Domain.Entities.PropertyAvailability", b =>

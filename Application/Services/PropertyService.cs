@@ -1,19 +1,34 @@
-﻿using PropertyReservation.Application.Interfaces;
-using PropertyReservation.Domain.Interfaces;
-using PropertyReservation.Domain.Entities;
-using PropertyReservation.Domain.ValueObjects;
-using PropertyReservation.Application.DTOs.Property;
+﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PropertyReservation.Application.DTOs.Property;
+using PropertyReservation.Application.Interfaces;
+using PropertyReservation.Domain.Entities;
+using PropertyReservation.Domain.Interfaces;
 
 namespace PropertyReservation.Application.Services
 {
     public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IAmenityRepository _amenityRepository;
+        private readonly IPropertyImageRepository _propertyImageRepository;
+        private readonly IMapper _mapper;
 
-        public PropertyService(IPropertyRepository propertyRepository)
+        public PropertyService(
+            IPropertyRepository propertyRepository, 
+            IUserRepository userRepository, 
+            IAmenityRepository amenityRepository, 
+            IPropertyImageRepository propertyImageRepository, 
+            IMapper mapper
+        )
         {
             _propertyRepository = propertyRepository;
+            _userRepository = userRepository;
+            _amenityRepository = amenityRepository;
+            _propertyImageRepository = propertyImageRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Property>> GetAllPropertiesAsync()
@@ -21,9 +36,45 @@ namespace PropertyReservation.Application.Services
             return await _propertyRepository.GetAllAsync();
         }
 
-        public async Task<Property> GetPropertyByIdAsync(int id)
+        public async Task<IEnumerable<PropertyListResponseDTO>> GetPropertyListAsync()
+        {
+            var properties =  await _propertyRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<PropertyListResponseDTO>>(properties);
+        }
+
+        public async Task<Property?> GetPropertyByIdAsync(int id)
         {
             return await _propertyRepository.GetByIdAsync(id);
+        }
+
+        public async Task<PropertyDetailsResponseDTO> GetPropertyDetailsByIdAsync(int id)
+        {
+            var property = await _propertyRepository.GetByIdAsync(id);
+            return _mapper.Map<PropertyDetailsResponseDTO>(property);
+        }
+
+        public async Task<Property> CreatePropertyAsync(PropertyRequestDTO propertyDTO)
+        {
+            Property property = _mapper.Map<Property>(propertyDTO);
+
+            var owner = await _userRepository.GetByIdAsync(propertyDTO.OwnerId);
+            if (owner is null)
+            {
+                throw new ArgumentException($"El usuario con ID {propertyDTO.OwnerId} no existe.");
+            }
+            property.Owner = owner;
+
+            if (propertyDTO.AmenityIds.Any())
+            {
+                property.Amenities = await _amenityRepository.GetAmenitiesByIdsAsync(propertyDTO.AmenityIds);
+            }
+
+            if (propertyDTO.ImageIds.Any())
+            {
+                property.Images = await _propertyImageRepository.GetPropertyImagesByIdsAsync(propertyDTO.ImageIds);
+            }
+
+            return await _propertyRepository.AddAsync(property);
         }
 
         public async Task PutPropertyAsync(int id, PropertyRequestDTO propertyDTO)
@@ -32,14 +83,19 @@ namespace PropertyReservation.Application.Services
             {
                 throw new KeyNotFoundException("Propiedad no encontrada.");
             }
-            Property property = mapearDtoProperty(propertyDTO);
-            await _propertyRepository.UpdateAsync(property);
-        }
+            Property property = _mapper.Map<Property>(propertyDTO);
 
-        public async Task<Property> CreatePropertyAsync(PropertyRequestDTO propertyDTO)
-        {
-            Property property = mapearDtoProperty(propertyDTO);
-            return await _propertyRepository.AddAsync(property);
+            if (propertyDTO.AmenityIds.Any())
+            {
+                property.Amenities = await _amenityRepository.GetAmenitiesByIdsAsync(propertyDTO.AmenityIds);
+            }
+
+            if (propertyDTO.ImageIds.Any())
+            {
+                property.Images = await _propertyImageRepository.GetPropertyImagesByIdsAsync(propertyDTO.ImageIds);
+            }
+
+            await _propertyRepository.UpdateAsync(property);
         }
 
         public async Task DeletePropertyAsync(int id)
@@ -54,25 +110,6 @@ namespace PropertyReservation.Application.Services
         public async Task<bool> PropertyExistsAsync(int id)
         {
             return await _propertyRepository.PropertyExistsAsync(id);
-        }
-
-        // Posibilidad de luego usar AutoMapper
-        public Property mapearDtoProperty(PropertyRequestDTO dto)
-        {
-            return new Property
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                NightlyPrice = dto.NightlyPrice,
-                MaxGuests = dto.MaxGuests,
-                Address = new Address
-                {
-                    City = dto.Address.City,
-                    Country = dto.Address.Country,
-                    StreetAddress = dto.Address.StreetAddress,
-                    PostalCode = dto.Address.PostalCode
-                }
-            };
         }
     }
 }
