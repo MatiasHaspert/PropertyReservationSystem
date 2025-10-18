@@ -18,6 +18,15 @@ namespace PropertyReservation.Application.Services
             _propertyRepository = propertyRepository;
         }
 
+        public async Task<IEnumerable<PropertyAvailabilityResponseDTO>> GetPropertyAvailabilitiesAsync(int propertyId)
+        {
+            if (!await _propertyRepository.PropertyExistsAsync(propertyId))
+                throw new ArgumentException("La propiedad indicada no existe.");
+
+            var availabilities = await _availabilityRepository.GetPropertyAvailabilitiesAsync(propertyId);
+            return availabilities.Select(a => MapPropertyAvailabilityToDTO(a)).ToList();
+        }
+
         public async Task<PropertyAvailabilityResponseDTO> CreatePropertyAvailabilityAsync(PropertyAvailabilityRequestDTO availabilityDto)
         {
             ValidateAvailabilityDates(availabilityDto.StartDate, availabilityDto.EndDate);
@@ -43,15 +52,6 @@ namespace PropertyReservation.Application.Services
                 throw new ArgumentException("La disponibilidad indicada no existe.");
 
             await _availabilityRepository.DeletePropertyAvailabilityAsync(availabilityId);
-        }
-
-        public async Task<IEnumerable<PropertyAvailabilityResponseDTO>> GetPropertyAvailabilitiesAsync(int propertyId)
-        {
-            if (!await _propertyRepository.PropertyExistsAsync(propertyId))
-                throw new ArgumentException("La propiedad indicada no existe.");
-
-            var availabilities = await _availabilityRepository.GetPropertyAvailabilitiesAsync(propertyId);
-            return availabilities.Select(a => MapPropertyAvailabilityToDTO(a)).ToList();
         }
 
         public async Task UpdatePropertyAvailabilityAsync(int availabilityId, PropertyAvailabilityRequestDTO availabilityDto)

@@ -7,6 +7,5 @@
         public bool IsMainImage { get; set; }       
         public DateTime CreatedAt { get; set; }    
         public int PropertyId { get; set; }
-
     }
 }

@@ -16,11 +16,24 @@ namespace PropertyReservation.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<PropertyAvailability>> GetPropertyAvailabilitiesAsync(int propertyId)
+        {
+            return await _context.PropertyAvailabilities
+                .Where(pa => pa.PropertyId == propertyId)
+                .ToListAsync();
+        }
+        
         public async Task<PropertyAvailability> CreatePropertyAvailabilityAsync(PropertyAvailability availability)
         {
             await _context.PropertyAvailabilities.AddAsync(availability);
             await _context.SaveChangesAsync();
             return availability;
+        }
+
+        public async Task UpdatePropertyAvailabilityAsync(PropertyAvailability availability)
+        {
+            _context.Update(availability);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeletePropertyAvailabilityAsync(int availabilityId)
@@ -31,19 +44,6 @@ namespace PropertyReservation.Infrastructure.Repositories
                 _context.PropertyAvailabilities.Remove(availability);
                 _context.SaveChanges();
             }
-        }
-
-        public async Task<IEnumerable<PropertyAvailability>> GetPropertyAvailabilitiesAsync(int propertyId)
-        {
-            return await _context.PropertyAvailabilities
-                .Where(pa => pa.PropertyId == propertyId)
-                .ToListAsync();
-        }
-
-        public async Task UpdatePropertyAvailabilityAsync(PropertyAvailability availability)
-        {
-            _context.Update(availability);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> HasOverlappingAvailabilityAsyncCreate(PropertyAvailabilityRequestDTO dto)
