@@ -14,28 +14,18 @@ namespace PropertyReservation.Application.Services
             _amenityRepository = amenityRepository;
         }
 
-        public async Task<AmenityResponseDTO> CreateAmenityAsync(AmenityRequestDTO amenityRequestDTO)
-        {
-            var amenity = MapDtoToAmenity(amenityRequestDTO);
-            return await _amenityRepository.CreateAmenityAsync(amenity).ContinueWith(a => MapAmenityToDto(a.Result));
-        }
-
-        public async Task DeleteAmenityAsync(int amenityId)
-        {
-            var amenityExists = await _amenityRepository.AmenityExistsAsync(amenityId);
-            if (!amenityExists)
-            {
-                throw new ArgumentException("Servicio no encontrado.");
-            }
-            await _amenityRepository.DeleteAsync(amenityId);
-        }
-
         public async Task<ICollection<AmenityResponseDTO>> GetAllAmenitiesAsync()
         {
             var amenities = await _amenityRepository.GetAllAmenitiesAsync();
             return amenities.Select(a => MapAmenityToDto(a)).ToList();
         }
-
+        
+        public async Task<AmenityResponseDTO> CreateAmenityAsync(AmenityRequestDTO amenityRequestDTO)
+        {
+            var amenity = MapDtoToAmenity(amenityRequestDTO);
+            return await _amenityRepository.CreateAmenityAsync(amenity).ContinueWith(a => MapAmenityToDto(a.Result));
+        }
+        
         public async Task UpdateAmenityAsync(int amenityId, AmenityRequestDTO amenityRequestDTO)
         {
             var amenityExists = await _amenityRepository.AmenityExistsAsync(amenityId);
@@ -46,6 +36,16 @@ namespace PropertyReservation.Application.Services
             var amenity = MapDtoToAmenity(amenityRequestDTO);
             amenity.Id = amenityId;
             await _amenityRepository.UpdateAmenityAsync(amenity);
+        }
+
+        public async Task DeleteAmenityAsync(int amenityId)
+        {
+            var amenityExists = await _amenityRepository.AmenityExistsAsync(amenityId);
+            if (!amenityExists)
+            {
+                throw new ArgumentException("Servicio no encontrado.");
+            }
+            await _amenityRepository.DeleteAsync(amenityId);
         }
 
         private AmenityResponseDTO MapAmenityToDto(Amenity amenity)
