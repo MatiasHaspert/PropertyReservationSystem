@@ -8,8 +8,10 @@ namespace PropertyReservation.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; } = string.Empty;
+        
         public ICollection<Property> Properties { get; set; } = new List<Property>();
     }
 }

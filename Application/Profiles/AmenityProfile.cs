@@ -2,7 +2,7 @@
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Application.DTOs.Amenity;
 
-namespace AmenityReservation.Application.Profiles
+namespace PropertyReservation.Application.Profiles
 {
     public class AmenityProfile : Profile
     {

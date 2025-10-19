@@ -10,15 +10,19 @@ namespace PropertyReservation.Application.Services
         private readonly IPropertyImageRepository _propertyImageRepository;
         private readonly IPropertyRepository _propertyRepository;
         private readonly IWebHostEnvironment _environment; // Informacion del entorno actual donde corre mi app 
+        privete readonly IMapper _mapper;
 
         public PropertyImageService(
             IPropertyImageRepository propertyImageRepository,
             IPropertyRepository propertyRepository,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IMapper mapper
+        )
         {
             _propertyImageRepository = propertyImageRepository;
             _propertyRepository = propertyRepository;
             _environment = webHostEnvironment;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<PropertyImageResponseDTO>> GetImagesByPropertyAsync(int propertyId)
@@ -29,7 +33,7 @@ namespace PropertyReservation.Application.Services
                 throw new ArgumentException("La propiedad no existe.");
             }
             var images = await _propertyImageRepository.GetPropertyImagesByPropertyIdAsync(propertyId);
-            return images.Select(img => MapPropertyImageToDTO(img)).ToList();
+            return images.Select(img => _mapper.Map<PropertyImageResponseDTO>(img)).ToList();
         }
 
         public async Task<List<PropertyImageResponseDTO>> UploadPropertyImagesAsync(int propertyId, List<IFormFile> files, HttpRequest request)
@@ -84,7 +88,7 @@ namespace PropertyReservation.Application.Services
             }
 
             await _propertyImageRepository.AddRangePropertyImageAsync(uploadedImages);
-            var propertyImagesDTOs =  uploadedImages.Select(pi => MapPropertyImageToDTO(pi)).ToList();
+            var propertyImagesDTOs =  uploadedImages.Select(pi => _mapper.Map<PropertyImageResponseDTO>(pi)).ToList();
             return propertyImagesDTOs;
         }
 
@@ -127,20 +131,8 @@ namespace PropertyReservation.Application.Services
 
             await _propertyImageRepository.UpdateRangeAsync(images);
 
-            return MapPropertyImageToDTO(newMain);
+            return _mapper.Map<PropertyImageResponseDTO>(newMain);
         }
 
-
-        private PropertyImageResponseDTO MapPropertyImageToDTO(PropertyImage image)
-        {
-            return new PropertyImageResponseDTO
-            {
-                Id = image.Id,
-                PropertyId = image.PropertyId,
-                Url = image.Url,
-                IsMainImage = image.IsMainImage,
-                CreatedAt = image.CreationDate
-            };
-        }
     }
 }

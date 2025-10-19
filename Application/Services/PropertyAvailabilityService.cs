@@ -11,11 +11,17 @@ namespace PropertyReservation.Application.Services
     {
         private readonly IPropertyAvailabilityRespository _availabilityRepository;
         private readonly IPropertyRepository _propertyRepository;
-        public PropertyAvailabilityService(IPropertyAvailabilityRespository availabilityRepository,
-                                           IPropertyRepository propertyRepository)
+        private readonly IMapper _mapper;
+
+        public PropertyAvailabilityService(
+            IPropertyAvailabilityRespository availabilityRepository,
+            IPropertyRepository propertyRepository
+            IMapper mapper
+        )
         {
             _availabilityRepository = availabilityRepository;
             _propertyRepository = propertyRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<PropertyAvailabilityResponseDTO>> GetPropertyAvailabilitiesAsync(int propertyId)
@@ -24,7 +30,7 @@ namespace PropertyReservation.Application.Services
                 throw new ArgumentException("La propiedad indicada no existe.");
 
             var availabilities = await _availabilityRepository.GetPropertyAvailabilitiesAsync(propertyId);
-            return availabilities.Select(a => MapPropertyAvailabilityToDTO(a)).ToList();
+            return availabilities.Select(a => _mapper.Map<PropertyAvailabilityResponseDTO>(a)).ToList();
         }
 
         public async Task<PropertyAvailabilityResponseDTO> CreatePropertyAvailabilityAsync(PropertyAvailabilityRequestDTO availabilityDto)
@@ -41,9 +47,9 @@ namespace PropertyReservation.Application.Services
             if (hasOverlap)
                 throw new InvalidOperationException("La disponibilidad se solapa con una existente.");
 
-            var availability = MapDTOToPropertyAvailability(availabilityDto);
+            var availability = _mapper.Map<PropertyAvailability>(availabilityDto);
             var createdAvailability = await _availabilityRepository.CreatePropertyAvailabilityAsync(availability);
-            return MapPropertyAvailabilityToDTO(createdAvailability);
+            return _mapper.Map<PropertyAvailabilityResponseDTO>(createdAvailability);
         }
 
         public async Task UpdatePropertyAvailabilityAsync(int availabilityId, PropertyAvailabilityRequestDTO availabilityDto)
@@ -65,7 +71,7 @@ namespace PropertyReservation.Application.Services
             if (hasOverlap)
                 throw new InvalidOperationException("La disponibilidad se solapa con una existente.");
 
-            var availability = MapDTOToPropertyAvailability(availabilityDto);
+            var availability = _mapper.Map<PropertyAvailability>(availabilityDto);
             availability.Id = availabilityId; // Asegurar que el ID se mantiene para la actualización
             await _availabilityRepository.UpdatePropertyAvailabilityAsync(availability);
         }
@@ -90,24 +96,5 @@ namespace PropertyReservation.Application.Services
                 throw new ArgumentException("La disponibilidad debe durar al menos un día.");
         }
 
-        private PropertyAvailabilityResponseDTO MapPropertyAvailabilityToDTO(PropertyAvailability availability)
-        {
-            return new PropertyAvailabilityResponseDTO
-            {
-                Id = availability.Id,
-                PropertyId = availability.PropertyId,
-                StartDate = availability.StartDate,
-                EndDate = availability.EndDate,
-            };
-        }
-        private PropertyAvailability MapDTOToPropertyAvailability(PropertyAvailabilityRequestDTO dto)
-        {
-            return new PropertyAvailability
-            {
-                PropertyId = dto.PropertyId,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-            };
-        }
     }
 }

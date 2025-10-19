@@ -55,6 +55,7 @@ namespace PropertyReservation.Infrastructure.Repositories
                     a.StartDate <= dto.EndDate &&
                     a.EndDate >= dto.StartDate);
         }
+
         public async Task<bool> HasOverlappingAvailabilityAsyncUpdate(int availabilityId, PropertyAvailabilityRequestDTO dto)
         {
             return await _context.PropertyAvailabilities

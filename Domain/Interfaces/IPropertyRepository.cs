@@ -10,6 +10,5 @@ namespace PropertyReservation.Domain.Interfaces
         Task UpdateAsync(Property property);
         Task DeleteAsync(int id);
         Task<bool> PropertyExistsAsync(int id);
-
     }
 }

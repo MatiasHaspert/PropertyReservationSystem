@@ -9,13 +9,17 @@ namespace PropertyReservation.Application.Services
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IMapper _mapper;
 
         public ReviewService(
             IReviewRepository reviewRepository,
-            IPropertyRepository propertyRepository)
+            IPropertyRepository propertyRepository,
+            IMapper mapper
+        )
         {
             _reviewRepository = reviewRepository;
             _propertyRepository = propertyRepository;
+            _mapper = mapper;
         }
 
         public async Task<ReviewResponseDTO> GetPropertyReviewByIdAsync(int propertyId, int reviewId)
@@ -30,7 +34,7 @@ namespace PropertyReservation.Application.Services
             {
                 throw new KeyNotFoundException("Reseña no encontrado.");
             }
-            return MapReviewToDTO(review);
+            return _mapper.Map<ReviewResponseDTO>(review); 
         }
 
         public async Task<IEnumerable<ReviewResponseDTO>> GetPropertyReviewsAsync(int propertyId)
@@ -41,7 +45,7 @@ namespace PropertyReservation.Application.Services
                 throw new KeyNotFoundException("Propiedad no encontrada.");
             }
             var reviews = await _reviewRepository.GetPropertyReviewsAsync(propertyId);
-            return reviews.Select(r => MapReviewToDTO(r)).ToList();
+            return reviews.Select(r => _mapper.Map<ReviewResponseDTO>(r)).ToList();
         }
 
         public async Task<ReviewResponseDTO> CreateReviewAsync(ReviewRequestDTO reviewRequestDTO)
@@ -52,9 +56,9 @@ namespace PropertyReservation.Application.Services
                 throw new KeyNotFoundException("Propiedad no encontrada.");
             }
 
-            var review = MapDTOToReview(reviewRequestDTO);
+            var review = _mapper.Map<Review>(reviewRequestDTO);
             return await _reviewRepository.CreateReviewAsync(review)
-                .ContinueWith(t => MapReviewToDTO(t.Result));
+                .ContinueWith(t => _mapper.Map<ReviewResponseDTO>(t.Result));
         }
 
         public async Task UpdateReviewAsync(int reviewId, ReviewRequestDTO reviewRequestDTO)
@@ -70,7 +74,7 @@ namespace PropertyReservation.Application.Services
             {
                 throw new KeyNotFoundException("Reseña no encontrada.");
             }
-            var review = MapDTOToReview(reviewRequestDTO);
+            var review = _mapper.Map<Review>(reviewRequestDTO);
             review.Id = reviewId; 
             await _reviewRepository.UpdateReviewAsync(review);
         }
@@ -86,29 +90,5 @@ namespace PropertyReservation.Application.Services
             await _reviewRepository.DeleteAsync(reviewId);
         }
 
-        private ReviewResponseDTO MapReviewToDTO(Review review)
-        {
-            return new ReviewResponseDTO
-            {
-                Id = review.Id,
-                PropertyId = review.PropertyId,
-                Rating = review.Rating,
-                Comment = review.Comment,
-                UserId = review.UserId,
-                Date = review.Date
-            };
-        }
-
-        private Review MapDTOToReview(ReviewRequestDTO reviewRequestDTO)
-        {
-            return new Review
-            {
-                PropertyId = reviewRequestDTO.PropertyId,
-                Rating = reviewRequestDTO.Rating,
-                Comment = reviewRequestDTO.Comment,
-                UserId = reviewRequestDTO.UserId,
-                Date = DateTime.UtcNow
-            };
-        }
     }
 }

@@ -8,22 +8,24 @@ namespace PropertyReservation.Application.Services
     public class AmenityService : IAmenityService
     {
         private readonly IAmenityRepository _amenityRepository;
+        private readonly IMapper _mapper;
 
-        public AmenityService(IAmenityRepository amenityRepository)
+        public AmenityService(IAmenityRepository amenityRepository, IMapper mapper)
         {
             _amenityRepository = amenityRepository;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<AmenityResponseDTO>> GetAllAmenitiesAsync()
         {
             var amenities = await _amenityRepository.GetAllAmenitiesAsync();
-            return amenities.Select(a => MapAmenityToDto(a)).ToList();
+            return amenities.Select(a => _mapper.Map<AmenityResponseDTO>(a)).ToList();
         }
         
         public async Task<AmenityResponseDTO> CreateAmenityAsync(AmenityRequestDTO amenityRequestDTO)
         {
-            var amenity = MapDtoToAmenity(amenityRequestDTO);
-            return await _amenityRepository.CreateAmenityAsync(amenity).ContinueWith(a => MapAmenityToDto(a.Result));
+            var amenity = _mapper.Map<Amenity>(amenityRequestDTO);
+            return await _amenityRepository.CreateAmenityAsync(amenity).ContinueWith(a => _mapper.Map<AmenityResponseDTO>(a));
         }
         
         public async Task UpdateAmenityAsync(int amenityId, AmenityRequestDTO amenityRequestDTO)
@@ -33,7 +35,7 @@ namespace PropertyReservation.Application.Services
             {
                 throw new ArgumentException("Servicio no encontrado.");
             }
-            var amenity = MapDtoToAmenity(amenityRequestDTO);
+            var amenity = _mapper.Map<Amenity>(amenityRequestDTO);
             amenity.Id = amenityId;
             await _amenityRepository.UpdateAmenityAsync(amenity);
         }
@@ -48,21 +50,5 @@ namespace PropertyReservation.Application.Services
             await _amenityRepository.DeleteAsync(amenityId);
         }
 
-        private AmenityResponseDTO MapAmenityToDto(Amenity amenity)
-        {
-            return new AmenityResponseDTO
-            {
-                Id = amenity.Id,
-                Name = amenity.Name,
-            };
-        }
-
-        private Amenity MapDtoToAmenity(AmenityRequestDTO dto)
-        {
-            return new Amenity
-            {
-                Name = dto.Name,
-            };
-        }
     }
 }

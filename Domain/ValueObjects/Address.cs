@@ -2,27 +2,28 @@
 {
     public class Address
     {
-        public string City { get; set; } 
+        [Required]
         public string Country { get; set; }
-        public string StreetAddress { get; set; }
-        public int PostalCode { get; set; }
+
+        [Required]
         public string State { get; set; }
 
-        public Address() 
+        [Required]
+        public string City { get; set; } 
+
+        [Required]
+        public int PostalCode { get; set; }
+        
+        [Required]
+        public string StreetAddress { get; set; }
+
+        public Address(string country, , string state, string city, int postalCode, string streetAddress)
         {
-            City = string.Empty;
-            Country = string.Empty;
-            StreetAddress = string.Empty;
-            PostalCode = 0;
-            State = string.Empty;
-        }
-        public Address(string city, string country, string streetAddress, int postalCode, string state)
-        {
-            City = city;
             Country = country;
-            StreetAddress = streetAddress;
-            PostalCode = postalCode;
             State = state;
+            City = city;
+            PostalCode = postalCode;
+            StreetAddress = streetAddress;
         }
 
     }
