@@ -1,4 +1,5 @@
-﻿using PropertyReservation.Application.DTOs.PropertyImage;
+﻿using AutoMapper;
+using PropertyReservation.Application.DTOs.PropertyImage;
 using PropertyReservation.Application.Interfaces;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Domain.Interfaces;
@@ -10,7 +11,7 @@ namespace PropertyReservation.Application.Services
         private readonly IPropertyImageRepository _propertyImageRepository;
         private readonly IPropertyRepository _propertyRepository;
         private readonly IWebHostEnvironment _environment; // Informacion del entorno actual donde corre mi app 
-        privete readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public PropertyImageService(
             IPropertyImageRepository propertyImageRepository,

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using PropertyReservation.Domain.Entities;
-using PropertyReservation.Application.DTOs.Review;
+using PropertyReservation.Application.DTOs.PropertyImage;
 
 namespace PropertyReservation.Application.Profiles
 {

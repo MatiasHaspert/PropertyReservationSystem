@@ -10,7 +10,7 @@ namespace PropertyReservation.Application.Profiles
         {
             CreateMap<Review, ReviewResponseDTO>();
             CreateMap<ReviewRequestDTO, Review>()
-                .ForMember(dest => dest.Date = DateTime.UtcNow);
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.UtcNow));
         }
     }
 }

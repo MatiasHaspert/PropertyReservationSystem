@@ -28,7 +28,7 @@ namespace PropertyReservation.Domain.Entities
         public int Bathrooms { get; set; }
         
         [Required]
-        public Address Address { get; set; } = new Address();
+        public Address? Address { get; set; }
         
         public string Description { get; set; } = string.Empty;
         

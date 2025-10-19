@@ -1,4 +1,5 @@
-﻿using Humanizer;
+﻿using AutoMapper;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using PropertyReservation.Application.DTOs.PropertyAvailability;
 using PropertyReservation.Application.Interfaces;
@@ -15,7 +16,7 @@ namespace PropertyReservation.Application.Services
 
         public PropertyAvailabilityService(
             IPropertyAvailabilityRespository availabilityRepository,
-            IPropertyRepository propertyRepository
+            IPropertyRepository propertyRepository,
             IMapper mapper
         )
         {

@@ -1,4 +1,5 @@
-﻿using PropertyReservation.Application.Interfaces;
+﻿using AutoMapper;
+using PropertyReservation.Application.Interfaces;
 using PropertyReservation.Domain.Entities;
 using PropertyReservation.Domain.Interfaces;
 using PropertyReservation.Application.DTOs.Review;

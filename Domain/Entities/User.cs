@@ -18,7 +18,7 @@ namespace PropertyReservation.Domain.Entities
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
         
-        public Address Address { get; set; } = new Address();
+        public Address? Address { get; set; }
         
         [MaxLength(20)]
         public string Phone { get; set; } = string.Empty;

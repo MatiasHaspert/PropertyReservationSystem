@@ -19,14 +19,13 @@ namespace PropertyReservation.Infrastructure.Data
                 LastName = "Owner1",
                 Email = "owner1@example.com",
                 Phone = "1234567890",
-                Address = new Address
-                {
-                    City = "Ciudad",
-                    Country = "Argentina",
-                    StreetAddress = "Calle Falsa 123",
-                    PostalCode = 1000,
-                    State = "Buenos Aires"
-                }
+                Address = new Address(
+                    country:"Argentina", 
+                    state: "Buenos Aires",
+                    city:"Ciudad",
+                    postalCode:1000,
+                    streetAddress: "Calle Falsa 123"
+                )
             };
             context.Users.Add(owner1);
             await context.SaveChangesAsync();
@@ -42,14 +41,13 @@ namespace PropertyReservation.Infrastructure.Data
                 MaxGuests = 3,
                 Bedrooms = 3,
                 Bathrooms = 2,
-                Address = new Address
-                {
-                    Country = "Argentina",
-                    City = "Rosario",
-                    PostalCode = 2000,
-                    StreetAddress = "Calle Montaña 123",
-                    State = "Santa Fe"
-                },
+                Address = new Address(
+                    country:"Argentina", 
+                    state:"Santa Fe", 
+                    city:"Rosario", 
+                    postalCode:2000, 
+                    streetAddress: "Calle Montaña 123"
+                ),
                 Description = """
 				Esta encantadora casa alpina combina estilo rústico y confort moderno.
 				Ideal para familias, ofrece un amplio jardín 🌳 y un entorno tranquilo.
