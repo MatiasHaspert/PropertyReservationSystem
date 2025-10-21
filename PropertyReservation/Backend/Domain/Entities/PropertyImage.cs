@@ -17,8 +17,8 @@ namespace Backend.Domain.Entities
         
         public bool IsMainImage { get; set; }
         
-        public DateTime CreationDate { get; set; }
-        
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+
         public int PropertyId { get; set; }
         
         public Property Property { get; set; } = null!;

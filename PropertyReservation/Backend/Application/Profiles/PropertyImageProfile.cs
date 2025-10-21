@@ -9,6 +9,7 @@ namespace Backend.Application.Profiles
         public PropertyImageProfile()
         {
             CreateMap<PropertyImage, PropertyImageResponseDTO>();
+
         }
     }
 }

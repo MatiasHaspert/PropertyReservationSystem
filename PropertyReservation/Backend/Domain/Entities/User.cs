@@ -25,7 +25,7 @@ namespace Backend.Domain.Entities
         // Roles
         // Investigar cómo vincularlo con el campo de las properties y reactivar
         // public ICollection<Property> Properties { get; set; } = new List<Property>();
-        
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

@@ -58,7 +58,7 @@ namespace Backend.WebAPI.Controllers
 
         // POST: api/PropertyAvailability
         [HttpPost]
-        public async Task<ActionResult<PropertyAvailability>> PostPropertyAvailability(PropertyAvailabilityRequestDTO propertyAvailabilityDTO)
+        public async Task<ActionResult<PropertyAvailabilityResponseDTO>> PostPropertyAvailability(PropertyAvailabilityRequestDTO propertyAvailabilityDTO)
         {
             try
             {

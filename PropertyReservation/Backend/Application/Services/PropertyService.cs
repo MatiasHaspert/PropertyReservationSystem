@@ -31,29 +31,26 @@ namespace Backend.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Property>> GetAllPropertiesAsync()
+        public async Task<PropertyListResponseDTO> GetPropertyByIdAsync(int id)
         {
-            return await _propertyRepository.GetAllAsync();
+            var property = await _propertyRepository.GetByIdAsync(id);
+            return _mapper.Map<PropertyListResponseDTO>(property);
         }
-
         public async Task<IEnumerable<PropertyListResponseDTO>> GetPropertyListAsync()
         {
-            var properties =  await _propertyRepository.GetAllAsync();
+            var properties =  await _propertyRepository.GetAllWithDetailsAsync();
+
             return _mapper.Map<IEnumerable<PropertyListResponseDTO>>(properties);
         }
 
-        public async Task<Property?> GetPropertyByIdAsync(int id)
-        {
-            return await _propertyRepository.GetByIdAsync(id);
-        }
 
         public async Task<PropertyDetailsResponseDTO> GetPropertyDetailsByIdAsync(int id)
         {
-            var property = await _propertyRepository.GetByIdAsync(id);
+            var property = await _propertyRepository.GetByIdWithDetailsAsync(id);
             return _mapper.Map<PropertyDetailsResponseDTO>(property);
         }
 
-        public async Task<Property> CreatePropertyAsync(PropertyRequestDTO propertyDTO)
+        public async Task<PropertyListResponseDTO> CreatePropertyAsync(PropertyRequestDTO propertyDTO)
         {
             Property property = _mapper.Map<Property>(propertyDTO);
 
@@ -69,12 +66,8 @@ namespace Backend.Application.Services
                 property.Amenities = await _amenityRepository.GetAmenitiesByIdsAsync(propertyDTO.AmenityIds);
             }
 
-            if (propertyDTO.ImageIds.Any())
-            {
-                property.Images = await _propertyImageRepository.GetPropertyImagesByIdsAsync(propertyDTO.ImageIds);
-            }
-
-            return await _propertyRepository.AddAsync(property);
+            var propertyCreate = await _propertyRepository.AddAsync(property);
+            return _mapper.Map<PropertyListResponseDTO>(propertyCreate);
         }
 
         public async Task PutPropertyAsync(int id, PropertyRequestDTO propertyDTO)
@@ -88,11 +81,6 @@ namespace Backend.Application.Services
             if (propertyDTO.AmenityIds.Any())
             {
                 property.Amenities = await _amenityRepository.GetAmenitiesByIdsAsync(propertyDTO.AmenityIds);
-            }
-
-            if (propertyDTO.ImageIds.Any())
-            {
-                property.Images = await _propertyImageRepository.GetPropertyImagesByIdsAsync(propertyDTO.ImageIds);
             }
 
             await _propertyRepository.UpdateAsync(property);

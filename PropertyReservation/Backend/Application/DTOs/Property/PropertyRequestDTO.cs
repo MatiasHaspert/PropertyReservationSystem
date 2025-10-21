@@ -40,7 +40,10 @@ namespace Backend.Application.DTOs.Property
         public ICollection<int> AmenityIds { get; set; } = new List<int>();
 
         // Acá me imagino que en el formulario de propiedades, al cargar una imagen se crea la misma y nos deja el id para hacer el request y asignarlo
-        public ICollection<int> ImageIds { get; set; } = new List<int>();
+
+        // Me parece que al momento de cargar una imagen ya se crea y se asocia a la propiedad, no es necesario enviarlas en el request porque ya están asociadas en la bdd
+        // Por lo tanto debemos asegurarnos de que primero se cree la propiedad y luego se puedan cargar las imágenes asociadas a la misma
+        // public ICollection<int> ImageIds { get; set; } = new List<int>();
 
     }
 }

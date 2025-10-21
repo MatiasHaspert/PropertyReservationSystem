@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Backend.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController] // Gracias a esta anotacion, el controlador responde a solicitudes HTTP, maneja automáticamente la serialización, deserialización de JSON y chequea validaciones.
+    [ApiController] 
     public class PropertyController : ControllerBase
     {
         private readonly IPropertyService _PropertyService;
@@ -28,13 +28,16 @@ namespace Backend.WebAPI.Controllers
             _ImageService = imageService;
         }
 
-        // GET: api/Property
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
+        // GET: api/Property/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PropertyListResponseDTO>> GetPropertyById(int id)
         {
-            IEnumerable<Property> propertyes = await _PropertyService.GetAllPropertiesAsync();
-
-            return Ok(propertyes);
+            var property = await _PropertyService.GetPropertyByIdAsync(id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+            return property;
         }
 
         // GET: api/Property/list
@@ -44,20 +47,6 @@ namespace Backend.WebAPI.Controllers
             IEnumerable<PropertyListResponseDTO> propertyes = await _PropertyService.GetPropertyListAsync();
 
             return Ok(propertyes);
-        }
-
-        // GET: api/Property/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Property>> GetProperty(int id)
-        {
-            var property = await _PropertyService.GetPropertyByIdAsync(id);
-
-            if (property == null)
-            {
-                return NotFound();
-            }
-
-            return property;
         }
 
         // GET: api/Property/detail/5
@@ -78,27 +67,44 @@ namespace Backend.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProperty(int id, PropertyRequestDTO property)
         {
-            await _PropertyService.PutPropertyAsync(id, property);
-
-            return NoContent();
+            try
+            { 
+                await _PropertyService.PutPropertyAsync(id, property);
+                return NoContent();
+            }
+            catch(ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
         // POST: api/Property
         [HttpPost]
-        public async Task<ActionResult<Property>> PostProperty(PropertyRequestDTO propertyDTO)
+        public async Task<ActionResult<PropertyListResponseDTO>> PostProperty(PropertyRequestDTO propertyDTO)
         {
-            Property property = await _PropertyService.CreatePropertyAsync(propertyDTO);
-
-            return CreatedAtAction("GetProperty", new { id = property.Id }, property);
+            try
+            {
+                PropertyListResponseDTO property = await _PropertyService.CreatePropertyAsync(propertyDTO);
+                return CreatedAtAction("GetPropertyById", new { id = property.Id }, property);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Property/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProperty(int id)
         {
-            await _PropertyService.DeletePropertyAsync(id);
-          
-            return NoContent();
+            try
+            {
+                await _PropertyService.DeletePropertyAsync(id);
+                return NoContent();
+            }
+            catch(ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost("{id}/images")]

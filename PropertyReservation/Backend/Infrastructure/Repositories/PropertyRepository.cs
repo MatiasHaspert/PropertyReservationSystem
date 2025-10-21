@@ -14,15 +14,28 @@ namespace Backend.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Property>> GetAllAsync()
-        {
-            return await _context.Properties.ToListAsync();
-        }
-
         public async Task<Property?> GetByIdAsync(int id)
         {
             return await _context.Properties.FindAsync(id);
         }
+
+        public async Task<IEnumerable<Property>> GetAllWithDetailsAsync()
+        {
+            return await _context.Properties
+                .Include(p => p.Images)
+                .Include(p => p.Reviews)
+                .ToListAsync();
+        }
+
+        public async Task<Property?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.Properties
+                .Include(p => p.Images)
+                .Include(p => p.Reviews)
+                .Include(p => p.Amenities)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
 
         public async Task<Property> AddAsync(Property property)
         {
@@ -49,5 +62,16 @@ namespace Backend.Infrastructure.Repositories
         {
             return await _context.Properties.AnyAsync(e => e.Id == id);
         }
+
+        public async Task<bool> IsWithinAvailabilityRangeAsync(int propertyId, DateTime startDate, DateTime endDate)
+        {
+            return await _context.PropertyAvailabilities
+                .AnyAsync(a =>
+                    a.PropertyId == propertyId &&
+                    a.StartDate <= startDate &&
+                    a.EndDate >= endDate
+                );
+        }
+
     }
 }

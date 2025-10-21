@@ -15,6 +15,7 @@ namespace Backend.Infrastructure.Data
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<PropertyAvailability> PropertyAvailabilities { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

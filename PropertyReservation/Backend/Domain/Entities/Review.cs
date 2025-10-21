@@ -14,7 +14,7 @@ namespace Backend.Domain.Entities
         
         public string Comment { get; set; } = string.Empty;
         
-        public DateTime Date { get; set; } // El campo Date lo generamos nosotros 
+        public DateTime Date { get; set; } = DateTime.Now;
         
         public int PropertyId { get; set; }
         

@@ -43,5 +43,6 @@ namespace Backend.Domain.Entities
         public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
         
         public ICollection<PropertyAvailability> Availabilities { get; set; } = new List<PropertyAvailability>();
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
