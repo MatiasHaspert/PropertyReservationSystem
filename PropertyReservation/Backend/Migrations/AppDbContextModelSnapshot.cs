@@ -445,7 +445,7 @@ namespace Backend.Migrations
                     b.HasOne("Backend.Domain.Entities.User", "Guest")
                         .WithMany("Reservations")
                         .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Backend.Domain.Entities.Property", "Property")

@@ -36,7 +36,14 @@ namespace Backend.Infrastructure.Data
                         .WithMany(u => u.Reviews)
                         .HasForeignKey(r => r.UserId)
                         .OnDelete(DeleteBehavior.Restrict); // o DeleteBehavior.NoAction
-            
+
+            // Configurar la relación entre Reservation y User para evitar eliminación en cascada
+            modelBuilder.Entity<Reservation>()
+                        .HasOne(res => res.Guest)
+                        .WithMany(u => u.Reservations)
+                        .HasForeignKey(res => res.GuestId)
+                        .OnDelete(DeleteBehavior.Restrict); // o DeleteBehavior.NoAction
+
             base.OnModelCreating(modelBuilder);
 
             // Datos iniciales de servicios populares

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251021212908_AddReservations")]
+    [Migration("20251021213507_AddReservations")]
     partial class AddReservations
     {
         /// <inheritdoc />
@@ -448,7 +448,7 @@ namespace Backend.Migrations
                     b.HasOne("Backend.Domain.Entities.User", "Guest")
                         .WithMany("Reservations")
                         .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Backend.Domain.Entities.Property", "Property")
