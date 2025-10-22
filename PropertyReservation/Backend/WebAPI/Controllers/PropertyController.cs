@@ -40,8 +40,8 @@ namespace Backend.WebAPI.Controllers
             return property;
         }
 
-        // GET: api/Property/list
-        [HttpGet("list")]
+        // GET: api/Property
+        [HttpGet()]
         public async Task<ActionResult<IEnumerable<PropertyListResponseDTO>>> GetPropertyList()
         {
             IEnumerable<PropertyListResponseDTO> propertyes = await _PropertyService.GetPropertyListAsync();
