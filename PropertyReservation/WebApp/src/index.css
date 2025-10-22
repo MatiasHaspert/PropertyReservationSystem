@@ -27,15 +27,7 @@ html, body, #root {
   margin: 0;
   padding: 0;
   font-size: 16px;
-  color: #ffffff;
 }
-/*
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-  */
 
 h1 {
   font-size: 3.2em;
@@ -73,3 +65,22 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.icon-button {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.25s ease;
+}
+
+.icon-button.edit:hover {
+  color: #007bff; /* azul */
+}
+
+.icon-button.delete:hover {
+  color: #dc3545; /* rojo */
+}
+

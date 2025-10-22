@@ -25,7 +25,7 @@ export default function Layout ({ children }) {
                 <Link className="nav-link" to="/">Home</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/properties/new">Crear propiedad</Link>
+                <Link className="nav-link" to="/my-properties">Mis propiedades</Link>
               </li>
             </ul>
           </div>

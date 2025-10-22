@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getProperties, deleteProperty } from "../services/propertyService";
-import { PropertyCard } from "../components/PropertyCard"
+import { getProperties } from "../services/propertyService";
+import PropertyCard from "../components/PropertyCard"
 
 export default function HomePage() {
     const [properties, setProperties] = useState([]);
@@ -16,11 +16,6 @@ export default function HomePage() {
         } catch (error) {
             console.error("Error cargando propiedades:", error);
         }
-    };
-
-    const handleDelete = async (id) => {
-        await deleteProperty(id);
-        loadProperties();
     };
 
     return (
