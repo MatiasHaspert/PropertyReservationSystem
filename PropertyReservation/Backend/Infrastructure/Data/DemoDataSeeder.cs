@@ -12,6 +12,9 @@ namespace Backend.Infrastructure.Data
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Users WHERE Name = 'Owner1'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Users WHERE Name = 'Owner2'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Casa Alpina'");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Departamento Centro'");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Chalet Playa'");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Finca'");
 
             // Crear usuario demo
             var owner1 = new User
@@ -49,7 +52,7 @@ namespace Backend.Infrastructure.Data
             await context.SaveChangesAsync();
 
             // Crear propiedad demo
-            var property = new Property
+            var property1 = new Property
             {
                 Title = "Casa Alpina",
                 NightlyPrice = 120000,
@@ -72,7 +75,81 @@ namespace Backend.Infrastructure.Data
                     """,
                 OwnerId = owner1.Id
             };
-            context.Properties.Add(property);
+            context.Properties.Add(property1);
+            await context.SaveChangesAsync();
+
+            var property2 = new Property
+            {
+                Title = "Departamento Centro",
+                NightlyPrice = 80000,
+                MaxGuests = 4,
+                Bedrooms = 2,
+                Bathrooms = 1,
+                Address = new Address(
+                    country: "Argentina",
+                    state: "Córdoba",
+                    city: "Córdoba",
+                    postalCode: 5000,
+                    streetAddress: "Av. Principal 456"
+                ),
+                Description = """
+                    Departamento moderno en pleno centro de Córdoba. Perfecto para estudiantes o parejas.
+ 
+                    🏙️ Cercano a universidades, comercios y transporte público.
+                    🛋️ Ambientes luminosos con excelente distribución y balcón al frente.
+                    """,
+                OwnerId = owner2.Id
+            };
+ 
+            var property3 = new Property
+            {
+                Title = "Chalet Playa",
+                NightlyPrice = 200000,
+                MaxGuests = 5,
+                Bedrooms = 4,
+                Bathrooms = 3,
+                Address = new Address(
+                    country: "Argentina",
+                    state: "Buenos Aires",
+                    city: "Mar del Plata",
+                    postalCode: 7600,
+                    streetAddress: "Camino Costero 789"
+                ),
+                Description = """
+                    Chalet frente al mar ideal para vacaciones o vivienda permanente.
+ 
+                    🌊 Vista directa al océano desde el living.
+                    🍃 Cuenta con jardín, garaje y parrilla.
+                    ✨ Ambientes amplios y luminosos, a pasos de la playa.
+                    """,
+                OwnerId = owner1.Id
+            };
+ 
+            var property4 = new Property
+            {
+                Title = "Finca",
+                NightlyPrice = 150000,
+                MaxGuests = 6,
+                Bedrooms = 3,
+                Bathrooms = 2,
+                Address = new Address(
+                    country: "Argentina",
+                    state: "Mendoza",
+                    city: "Mendoza",
+                    postalCode: 5500,
+                    streetAddress: "Camino de los Vinos 789"
+                ),
+                Description = """
+                    Finca en una exclusiva zona vitivinícola de Mendoza.
+ 
+                    🍇 Entorno natural con viñedos cercanos.
+                    🏡 Estilo rústico y elegante, ideal para inversión turística.
+                    🔒 Propiedad ya vendida, no visible para usuarios públicos.
+                    """,
+                OwnerId = owner2.Id
+            };
+ 
+            context.Properties.AddRange(property2, property3, property4);
             await context.SaveChangesAsync();
 
             // Agregar servicios a la propiedad 
@@ -83,7 +160,7 @@ namespace Backend.Infrastructure.Data
             {
                 new Review
                 {
-                    PropertyId = property.Id,
+                    PropertyId = property1.Id,
                     UserId = owner1.Id,
                     Rating = 5,
                     Comment = "Excelente lugar, muy limpio y con una vista increíble.",
@@ -91,7 +168,7 @@ namespace Backend.Infrastructure.Data
                 },
                 new Review
                 {
-                    PropertyId = property.Id,
+                    PropertyId = property1.Id,
                     UserId = owner2.Id,
                     Rating = 4,
                     Comment = "Hermosa casa, aunque un poco lejos del centro.",
@@ -105,13 +182,13 @@ namespace Backend.Infrastructure.Data
             {
                 new PropertyAvailability
                 {
-                    PropertyId = property.Id,
+                    PropertyId = property1.Id,
                     StartDate = new DateTime(2025, 10, 10),
                     EndDate = new DateTime(2025, 10, 20)
                 },
                 new PropertyAvailability
                 {
-                    PropertyId = property.Id,
+                    PropertyId = property1.Id,
                     StartDate = new DateTime(2025, 11, 1),
                     EndDate = new DateTime(2025, 11, 15)
                 }
@@ -124,8 +201,8 @@ namespace Backend.Infrastructure.Data
             var gimnasio = await context.Amenities.FirstOrDefaultAsync(s => s.Name == "Gimnasio");
 
             // Asociamos servicios existentes a la propiedad
-            if (wifi != null) property.Amenities.Add(wifi);
-            if (gimnasio != null) property.Amenities.Add(gimnasio);
+            if (wifi != null) property1.Amenities.Add(wifi);
+            if (gimnasio != null) property1.Amenities.Add(gimnasio);
 
             // Guardar todo
             await context.SaveChangesAsync();

@@ -38,7 +38,7 @@ export default function Layout ({ children }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-dark text-white fixed-bottom">
+      <footer className="bg-dark text-white fixed-bottom py-2">
         <div className="container-fluid text-center">
           &copy; {new Date().getFullYear()} Seminario I - Todos los derechos reservados
         </div>

@@ -24,8 +24,8 @@ export default function HomePage() {
     };
 
     return (
-        <div className="container mt-4">
-            <div className="d-flex flex-wrap gap-3">
+        <div className="container-fluid mt-4">
+            <div className="d-flex flex-wrap gap-3 justify-content-center">
                 {properties.length === 0 ? (
                     <p>No hay propiedades para mostrar.</p>
                 ) : (
