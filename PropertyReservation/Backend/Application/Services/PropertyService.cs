@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Azure.Core;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Backend.Application.DTOs.Property;
 using Backend.Application.Interfaces;
 using Backend.Domain.Entities;
+using Backend.Domain.Enums;
 using Backend.Domain.Interfaces;
+using Backend.Infrastructure.Repositories;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Backend.Application.Services
 {
@@ -14,6 +16,8 @@ namespace Backend.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IAmenityRepository _amenityRepository;
         private readonly IPropertyImageRepository _propertyImageRepository;
+        private readonly IPropertyAvailabilityRespository _availabilityRepository;
+        private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
 
         public PropertyService(
@@ -21,7 +25,9 @@ namespace Backend.Application.Services
             IUserRepository userRepository, 
             IAmenityRepository amenityRepository, 
             IPropertyImageRepository propertyImageRepository, 
-            IMapper mapper
+            IMapper mapper,
+            IPropertyAvailabilityRespository availabilityRepository,
+            IReservationRepository reservationRepository
         )
         {
             _propertyRepository = propertyRepository;
@@ -29,6 +35,8 @@ namespace Backend.Application.Services
             _amenityRepository = amenityRepository;
             _propertyImageRepository = propertyImageRepository;
             _mapper = mapper;
+            _availabilityRepository = availabilityRepository;
+            _reservationRepository = reservationRepository;
         }
 
         public async Task<PropertyListResponseDTO> GetPropertyByIdAsync(int id)
@@ -68,6 +76,33 @@ namespace Backend.Application.Services
 
             var propertyCreate = await _propertyRepository.AddAsync(property);
             return _mapper.Map<PropertyListResponseDTO>(propertyCreate);
+        }
+
+        public async Task<PropertyCalendarDTO> GetPropertyCalendarAsync(int propertyId)
+        {
+            var property = await _propertyRepository.GetByIdAsync(propertyId);
+            if (property == null)
+                throw new ArgumentException("Propiedad no encontrada.");
+
+            var availabilities = await _availabilityRepository.GetPropertyAvailabilitiesAsync(propertyId);
+            var reservations = await _reservationRepository.GetReservationsByPropertyIdAsync(propertyId);
+
+            return new PropertyCalendarDTO
+            {
+                PropertyId = propertyId,
+                AvailableRanges = availabilities.Select(a => new CalendarRangeDTO
+                {
+                    StartDate = a.StartDate,
+                    EndDate = a.EndDate
+                }).ToList(),
+                ReservedRanges = reservations
+                    .Where(r => r.Status == ReservationStatus.Confirmed || r.Status == ReservationStatus.Pending)
+                    .Select(r => new CalendarRangeDTO
+                    {
+                        StartDate = r.StartDate,
+                        EndDate = r.EndDate
+                    }).ToList()
+            };
         }
 
         public async Task PutPropertyAsync(int id, PropertyRequestDTO propertyDTO)

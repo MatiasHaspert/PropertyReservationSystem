@@ -23,25 +23,41 @@ namespace Backend.WebAPI.Controllers
             _reservationService = reservationService;
         }
 
-        // GET: api/Reservation
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservation()
-        {
-            throw new NotImplementedException();
-        }
-
         // GET: api/Reservation/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reservation>> GetReservation(int id)
+        public async Task<ActionResult<ReservationResponseDTO>> GetReservationById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _reservationService.GetReservationByIdAsync(id);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/Reservation/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, Reservation reservation)
+        public async Task<IActionResult> PutReservation(int id, ReservationRequestDTO reservationDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _reservationService.UpdateReservationAsync(id, reservationDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST: api/Reservation
@@ -64,12 +80,16 @@ namespace Backend.WebAPI.Controllers
 
         }
 
+
+        // Luego agregar un endpoint para cambiar el estado de una reserva
+        // Luego implentarlo cuando se agregue la funcionalidad de usuarios
+
         // DELETE: api/Reservation/5
+        // Endpoint para cancelar una reserva, luego implentarlo cuando se agregue la funcionalidad de usuarios
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
-            throw new NotImplementedException();
-
+           throw new NotImplementedException();
         }
        
     }

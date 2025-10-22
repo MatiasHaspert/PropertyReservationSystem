@@ -41,6 +41,11 @@ namespace Backend.Application.Services
                 throw new ArgumentException($"La propiedad con ID {reservationRequest.PropertyId} no existe.");
             }
 
+            if (reservation.TotalGuests > property.MaxGuests)
+            {
+                throw new InvalidOperationException("El número de huéspedes excede la capacidad máxima de la propiedad.");
+            }
+
             var guest = await _userRepository.GetByIdAsync(reservationRequest.GuestId);
             if (guest is null)
             {
@@ -51,7 +56,8 @@ namespace Backend.Application.Services
             bool overlaps = await _reservationRepository.HasOverlappingReservationAsync(
                 reservationRequest.PropertyId,
                 reservationRequest.StartDate,
-                reservationRequest.EndDate
+                reservationRequest.EndDate,
+                null
             );
 
             if (overlaps)
@@ -85,14 +91,88 @@ namespace Backend.Application.Services
             return response;
         }
 
+        public async Task UpdateReservationAsync(int id, ReservationRequestDTO reservationRequestDTO)
+        {
+            // Buscar la reserva existente
+            var existingReservation = await _reservationRepository.GetByIdAsync(id);
+            if (existingReservation is null)
+                throw new KeyNotFoundException($"La reserva con ID {id} no existe.");
+
+            // No permitir actualizar reservas canceladas o finalizadas
+            if (existingReservation.Status == ReservationStatus.Cancelled ||
+                existingReservation.Status == ReservationStatus.Completed)
+            {
+                throw new InvalidOperationException("No se puede modificar una reserva cancelada o finalizada.");
+            }
+
+            // Validar propiedad
+            var property = await _propertyRepository.GetByIdAsync(reservationRequestDTO.PropertyId);
+            if (property is null)
+                throw new ArgumentException($"La propiedad con ID {reservationRequestDTO.PropertyId} no existe.");
+
+            // Validar usuario
+            var guest = await _userRepository.GetByIdAsync(reservationRequestDTO.GuestId);
+            if (guest is null)
+                throw new ArgumentException($"El usuario con ID {reservationRequestDTO.GuestId} no existe.");
+
+            // Validar capacidad máxima
+            if (reservationRequestDTO.TotalGuests > property.MaxGuests)
+                throw new InvalidOperationException("El número de huéspedes excede la capacidad máxima de la propiedad.");
+
+            // Validar superposición de reservas (excluyendo la reserva actual)
+            bool overlaps = await _reservationRepository.HasOverlappingReservationAsync(
+                reservationRequestDTO.PropertyId,
+                reservationRequestDTO.StartDate,
+                reservationRequestDTO.EndDate,
+                excludeReservationId: id
+            );
+
+            if (overlaps)
+                throw new InvalidOperationException("El rango de fechas solicitado se superpone con otra reserva existente.");
+
+            // Validar rango dentro de disponibilidades
+            bool isWithinAvailability = await _propertyRepository.IsWithinAvailabilityRangeAsync(
+                reservationRequestDTO.PropertyId,
+                reservationRequestDTO.StartDate,
+                reservationRequestDTO.EndDate
+            );
+
+            if (!isWithinAvailability)
+                throw new InvalidOperationException("Las fechas seleccionadas no están disponibles para esta propiedad.");
+
+            // Calcular precio total
+            var nights = (reservationRequestDTO.EndDate - reservationRequestDTO.StartDate).Days;
+            if (nights <= 0)
+                throw new InvalidOperationException("El rango de fechas es inválido.");
+
+            decimal totalPrice = nights * property.NightlyPrice;
+
+            // Actualizar campos de la reserva
+            existingReservation.StartDate = reservationRequestDTO.StartDate;
+            existingReservation.EndDate = reservationRequestDTO.EndDate;
+            existingReservation.TotalGuests = reservationRequestDTO.TotalGuests;
+            existingReservation.TotalPrice = totalPrice;
+            existingReservation.PropertyId = reservationRequestDTO.PropertyId;
+            existingReservation.GuestId = reservationRequestDTO.GuestId;
+
+            // Guardar cambios
+            await _reservationRepository.UpdateAsync(existingReservation);
+        }
+
         public Task<IEnumerable<ReservationResponseDTO>> GetAllReservationsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<ReservationResponseDTO> GetReservationByIdAsync(int reservationId)
+        public async Task<ReservationResponseDTO> GetReservationByIdAsync(int reservationId)
         {
-            throw new NotImplementedException();
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            if (reservation is null)
+            {
+                throw new ArgumentException($"La reserva con ID {reservationId} no existe.");
+            }
+
+            return _mapper.Map<ReservationResponseDTO>(reservation);
         }
     }
 }

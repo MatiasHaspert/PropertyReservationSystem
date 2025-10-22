@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 namespace Backend.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController] 
+    [ApiController]
     public class PropertyController : ControllerBase
     {
         private readonly IPropertyService _PropertyService;
         private readonly IPropertyImageService _ImageService;
         public PropertyController(
-            IPropertyService PropertyService, 
+            IPropertyService PropertyService,
             IPropertyImageService imageService)
         {
             _PropertyService = PropertyService;
@@ -68,11 +68,11 @@ namespace Backend.WebAPI.Controllers
         public async Task<IActionResult> PutProperty(int id, PropertyRequestDTO property)
         {
             try
-            { 
+            {
                 await _PropertyService.PutPropertyAsync(id, property);
                 return NoContent();
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -101,7 +101,7 @@ namespace Backend.WebAPI.Controllers
                 await _PropertyService.DeletePropertyAsync(id);
                 return NoContent();
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -134,7 +134,7 @@ namespace Backend.WebAPI.Controllers
                 var images = await _ImageService.GetImagesByPropertyAsync(id);
                 return Ok(images);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -169,6 +169,20 @@ namespace Backend.WebAPI.Controllers
             catch (InvalidOperationException ex)
             {
                 return Conflict(ex.Message);
+            }
+        }
+
+        [HttpGet("{property_id}/calendar")]
+        public async Task<ActionResult<PropertyCalendarDTO>> GetPropertyCalendar(int property_id)
+        {
+            try
+            {
+                var calendar = await _PropertyService.GetPropertyCalendarAsync(property_id);
+                return Ok(calendar);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿using Backend.Application.DTOs.Reservation;
+using Backend.Domain.Enums;
+using System.Security.Claims;
 
 namespace Backend.Application.Interfaces
 {
@@ -8,5 +10,6 @@ namespace Backend.Application.Interfaces
         Task<ReservationResponseDTO> GetReservationByIdAsync(int reservationId);
         Task<IEnumerable<ReservationResponseDTO>> GetAllReservationsAsync();
         Task<bool> CancelReservationAsync(int reservationId);
+        Task UpdateReservationAsync(int id, ReservationRequestDTO reservationRequestDTO);
     }
 }

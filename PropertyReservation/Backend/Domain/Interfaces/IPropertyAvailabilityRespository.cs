@@ -9,8 +9,8 @@ namespace Backend.Domain.Interfaces
         Task<PropertyAvailability> CreatePropertyAvailabilityAsync(PropertyAvailability availability);
         Task UpdatePropertyAvailabilityAsync(PropertyAvailability availability);
         Task DeletePropertyAvailabilityAsync(int availabilityId);
-        Task<bool> HasOverlappingAvailabilityAsyncCreate(PropertyAvailabilityRequestDTO availabilityDTO);
-        Task<bool> HasOverlappingAvailabilityAsyncUpdate(int availabilityId, PropertyAvailabilityRequestDTO availabilityDTO);
+        Task<bool> HasOverlappingAvailabilityAsync(PropertyAvailabilityRequestDTO availabilityDTO, int ? excludeAvailabilityId);
         Task<bool> PropertyAvailabilityExistsAsync(int availabilityId);
+        Task<PropertyAvailability?> GetByIdAsync(int availabilityId);
     }
 }

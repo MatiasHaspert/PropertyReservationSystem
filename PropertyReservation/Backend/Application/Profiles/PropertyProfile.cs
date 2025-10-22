@@ -40,6 +40,7 @@ namespace Backend.Application.Profiles
                     opt => opt.MapFrom(src => src.Reviews));
 
             CreateMap<PropertyRequestDTO, Property>();
+
         }
     }
 }

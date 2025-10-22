@@ -1,4 +1,5 @@
 ﻿using Backend.Domain.Entities;
+using Backend.Domain.Enums;
 using Backend.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -152,8 +153,6 @@ namespace Backend.Infrastructure.Data
             context.Properties.AddRange(property2, property3, property4);
             await context.SaveChangesAsync();
 
-            // Agregar servicios a la propiedad 
-            
 
             // Agregar reseñas
             var reviews = new List<Review>
@@ -205,6 +204,36 @@ namespace Backend.Infrastructure.Data
             if (gimnasio != null) property1.Amenities.Add(gimnasio);
 
             // Guardar todo
+            await context.SaveChangesAsync();
+
+            // Agregamos reservas a la propiedad1
+            var reservations = new List<Reservation>
+            {
+                new Reservation
+                {
+                    PropertyId = property1.Id,
+                    GuestId = owner2.Id,
+                    StartDate = new DateTime(2025, 10, 10),
+                    EndDate = new DateTime(2025, 10, 15),
+                    TotalGuests = 2,
+                    TotalPrice = property1.NightlyPrice * 2,
+                    Status = ReservationStatus.Pending,
+                    CreatedAt = DateTime.UtcNow.AddDays(-5)
+                },
+                new Reservation
+                {
+                    PropertyId = property1.Id,
+                    GuestId = owner2.Id,
+                    StartDate = new DateTime(2025, 11, 05),
+                    EndDate = new DateTime(2025, 11, 08),
+                    TotalGuests = 4,
+                    TotalPrice = property1.NightlyPrice * 4,
+                    Status = ReservationStatus.Pending,
+                    CreatedAt = DateTime.UtcNow.AddDays(-5)
+                }
+            };
+            context.Reservations.AddRange(reservations);
+
             await context.SaveChangesAsync();
         }
     }

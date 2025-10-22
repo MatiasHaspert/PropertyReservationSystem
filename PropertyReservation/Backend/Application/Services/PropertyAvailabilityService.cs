@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
-using Humanizer;
-using Microsoft.EntityFrameworkCore;
 using Backend.Application.DTOs.PropertyAvailability;
 using Backend.Application.Interfaces;
 using Backend.Domain.Entities;
+using Backend.Domain.Enums;
 using Backend.Domain.Interfaces;
+using Backend.Infrastructure.Repositories;
+using Humanizer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services
 {
@@ -12,16 +14,19 @@ namespace Backend.Application.Services
     {
         private readonly IPropertyAvailabilityRespository _availabilityRepository;
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
 
         public PropertyAvailabilityService(
             IPropertyAvailabilityRespository availabilityRepository,
             IPropertyRepository propertyRepository,
+            IReservationRepository reservationRepository,
             IMapper mapper
         )
         {
             _availabilityRepository = availabilityRepository;
             _propertyRepository = propertyRepository;
+            _reservationRepository = reservationRepository;
             _mapper = mapper;
         }
 
@@ -44,7 +49,7 @@ namespace Backend.Application.Services
                 throw new InvalidOperationException("No se puede crear la disponibilidad: la propiedad no existe.");
 
             // Verificar solapamiento de fechas
-            var hasOverlap = await _availabilityRepository.HasOverlappingAvailabilityAsyncCreate(availabilityDto);
+            var hasOverlap = await _availabilityRepository.HasOverlappingAvailabilityAsync(availabilityDto, null);
             if (hasOverlap)
                 throw new InvalidOperationException("La disponibilidad se solapa con una existente.");
 
@@ -68,7 +73,7 @@ namespace Backend.Application.Services
                 throw new InvalidOperationException("No se puede crear la disponibilidad: la propiedad no existe.");
 
             // Verificar solapamiento de fechas, excluyendo la disponibilidad que se está actualizando
-            var hasOverlap = await _availabilityRepository.HasOverlappingAvailabilityAsyncUpdate(availabilityId, availabilityDto);
+            var hasOverlap = await _availabilityRepository.HasOverlappingAvailabilityAsync(availabilityDto, availabilityId);
             if (hasOverlap)
                 throw new InvalidOperationException("La disponibilidad se solapa con una existente.");
 
@@ -79,11 +84,26 @@ namespace Backend.Application.Services
 
         public async Task DeletePropertyAvailabilityAsync(int availabilityId)
         {
-            if(! await _availabilityRepository.PropertyAvailabilityExistsAsync(availabilityId))
+            // Obtener la disponibilidad
+            var availability = await _availabilityRepository.GetByIdAsync(availabilityId);
+            if (availability == null)
                 throw new ArgumentException("La disponibilidad indicada no existe.");
 
+            // Buscar reservas superpuestas
+            bool hasOverlappingReservations = await _reservationRepository.HasOverlappingReservationAsync(
+                availability.PropertyId,
+                availability.StartDate,
+                availability.EndDate,
+                null
+            );
+
+            if (hasOverlappingReservations)
+                throw new InvalidOperationException("No se puede eliminar la disponibilidad porque existen reservas confirmadas o pendientes dentro del rango.");
+
+            // Eliminar si no hay conflictos
             await _availabilityRepository.DeletePropertyAvailabilityAsync(availabilityId);
         }
+
 
         private void ValidateAvailabilityDates(DateTime start, DateTime end)
         {

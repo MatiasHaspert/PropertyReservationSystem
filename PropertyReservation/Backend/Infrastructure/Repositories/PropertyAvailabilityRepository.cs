@@ -46,29 +46,26 @@ namespace Backend.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> HasOverlappingAvailabilityAsyncCreate(PropertyAvailabilityRequestDTO dto)
+        public async Task<bool> HasOverlappingAvailabilityAsync(PropertyAvailabilityRequestDTO dto, int? excludeAvailabilityId = null)
         {
             // Todos intervalos [A, B] y [C, D] se solapan si A <= D y B >= C
             return await _context.PropertyAvailabilities
                 .AnyAsync(a =>
                     a.PropertyId == dto.PropertyId &&
+                    (excludeAvailabilityId == null || a.Id != excludeAvailabilityId) && // Excluir solo si se pasa
                     a.StartDate <= dto.EndDate &&
                     a.EndDate >= dto.StartDate);
         }
 
-        public async Task<bool> HasOverlappingAvailabilityAsyncUpdate(int availabilityId, PropertyAvailabilityRequestDTO dto)
-        {
-            return await _context.PropertyAvailabilities
-                .AnyAsync(a =>
-                    a.PropertyId == dto.PropertyId &&
-                    a.Id != availabilityId && // Excluir la disponibilidad que se está actualizando
-                    a.StartDate <= dto.EndDate &&
-                    a.EndDate >= dto.StartDate);
-        }
 
         public async Task<bool> PropertyAvailabilityExistsAsync(int availabilityId)
         {
             return await _context.PropertyAvailabilities.AnyAsync(a => a.Id == availabilityId);
+        }
+
+        public async Task<PropertyAvailability?> GetByIdAsync(int availabilityId)
+        {
+            return await _context.PropertyAvailabilities.FindAsync(availabilityId);
         }
     }
 }

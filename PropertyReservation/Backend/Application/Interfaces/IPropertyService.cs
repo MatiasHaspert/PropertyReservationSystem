@@ -11,5 +11,6 @@ namespace Backend.Application.Interfaces
         Task DeletePropertyAsync(int id);
         Task<bool> PropertyExistsAsync(int id);
         Task<PropertyListResponseDTO> GetPropertyByIdAsync(int id);
+        Task<PropertyCalendarDTO> GetPropertyCalendarAsync(int property_id);
     }
 }
