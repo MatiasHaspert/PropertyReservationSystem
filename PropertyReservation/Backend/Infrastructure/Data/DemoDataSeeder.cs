@@ -12,12 +12,14 @@ namespace Backend.Infrastructure.Data
             // Eliminar datos anteriores
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Users WHERE Name = 'Owner1'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Users WHERE Name = 'Owner2'");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Users WHERE Name = 'User1'");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Users WHERE Name = 'User2'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Casa Alpina'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Departamento Centro'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Chalet Playa'");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Properties WHERE Title = 'Finca'");
 
-            // Crear usuario demo
+            // Crear usuarios demo
             var owner1 = new User
             {
                 Name = "Owner1",
@@ -50,6 +52,40 @@ namespace Backend.Infrastructure.Data
                 )
             };
             context.Users.Add(owner2);
+            await context.SaveChangesAsync();
+
+            var user1 = new User
+            {
+                Name = "User1",
+                LastName = "User1",
+                Email = "user1@example.com",
+                Phone = "123117890",
+                Address = new Address(
+                    country: "Argentina",
+                    state: "Santa fe",
+                    city: "Rosario",
+                    postalCode: 2000,
+                    streetAddress: "Calle Falsa 123444"
+                )
+            };
+            context.Users.Add(user1);
+            await context.SaveChangesAsync();
+
+            var user2 = new User
+            {
+                Name = "User2",
+                LastName = "User2",
+                Email = "user2@example.com",
+                Phone = "123117890",
+                Address = new Address(
+                    country: "Argentina",
+                    state: "Santa fe",
+                    city: "Rosario",
+                    postalCode: 2000,
+                    streetAddress: "Calle Falsa 123444"
+                )
+            };
+            context.Users.Add(user2);
             await context.SaveChangesAsync();
 
             // Crear propiedad demo
@@ -155,26 +191,27 @@ namespace Backend.Infrastructure.Data
 
 
             // Agregar reseñas
-            var reviews = new List<Review>
+            var review1 = new Review
             {
-                new Review
-                {
-                    PropertyId = property1.Id,
-                    UserId = owner1.Id,
-                    Rating = 5,
-                    Comment = "Excelente lugar, muy limpio y con una vista increíble.",
-                    Date = DateTime.UtcNow.AddDays(-10)
-                },
-                new Review
-                {
-                    PropertyId = property1.Id,
-                    UserId = owner2.Id,
-                    Rating = 4,
-                    Comment = "Hermosa casa, aunque un poco lejos del centro.",
-                    Date = DateTime.UtcNow.AddDays(-3)
-                }
+                PropertyId = property1.Id,
+                UserId = user1.Id,
+                Rating = 5,
+                Comment = "Excelente lugar, muy limpio y con una vista increíble.",
+                Date = DateTime.UtcNow.AddDays(-10)
             };
-            context.Reviews.AddRange(reviews);
+
+            var review2 = new Review
+            {
+                PropertyId = property1.Id,
+                //   UserId = user2.Id,
+                User = user2,
+                Rating = 4,
+                Comment = "Hermosa casa, aunque un poco lejos del centro.",
+                Date = DateTime.UtcNow.AddDays(-3)
+            };
+
+            context.Reviews.AddRange(review1, review2);
+            await context.SaveChangesAsync();
 
             // Agregar disponibilidades
             var availabilities = new List<PropertyAvailability>

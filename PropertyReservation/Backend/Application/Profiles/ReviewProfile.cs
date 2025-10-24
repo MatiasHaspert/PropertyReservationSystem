@@ -8,7 +8,8 @@ namespace Backend.Application.Profiles
     {
         public ReviewProfile()
         {
-            CreateMap<Review, ReviewResponseDTO>();
+            CreateMap<Review, ReviewResponseDTO>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name));
             CreateMap<ReviewRequestDTO, Review>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.UtcNow));
         }

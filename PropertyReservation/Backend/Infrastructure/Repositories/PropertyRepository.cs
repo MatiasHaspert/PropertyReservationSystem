@@ -16,7 +16,9 @@ namespace Backend.Infrastructure.Repositories
 
         public async Task<Property?> GetByIdAsync(int id)
         {
-            return await _context.Properties.FindAsync(id);
+            return await _context.Properties
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IEnumerable<Property>> GetAllWithDetailsAsync()
@@ -32,6 +34,7 @@ namespace Backend.Infrastructure.Repositories
             return await _context.Properties
                 .Include(p => p.Images)
                 .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User) 
                 .Include(p => p.Amenities)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }

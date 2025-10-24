@@ -87,6 +87,7 @@ export default function PropertyDetailPage() {
                 </div>
             </div>
 
+            <hr className="my-4" bg-light-subtle />
             <Reviews reviews={property.reviews} />
         </div>
     );
