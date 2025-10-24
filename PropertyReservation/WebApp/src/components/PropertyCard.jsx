@@ -3,73 +3,78 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBed, faBath, faStar, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function PropertyCard({ property, showActions = false, onDelete, onEdit}) {
-    const {
-        title,
-        nightlyPrice,
-        maxGuests,
-        bedrooms,
-        bathrooms,
-        address,
-        averageRating,
-        mainImage,
-    } = property;
+  const {
+    title,
+    nightlyPrice,
+    maxGuests,
+    bedrooms,
+    bathrooms,
+    address,
+    averageRating,
+    mainImage,
+  } = property;
 
-    const fullAddress = `${address.streetAddress}, ${address.city}, ${address.state}, ${address.country}`;
+  const fullAddress = `${address.streetAddress}, ${address.city}, ${address.state}, ${address.country}`;
 
-    return (
-        <div className="card mb-3" style={{ width: "22rem" }}>
-            {showActions && (
-                <div className="d-flex justify-content-rigth position-absolute top-0 end-0 m-2">
-                    <button className="icon-button edit" onClick={() => onEdit?.(property.id)}>
-                        <FontAwesomeIcon
-                            icon={faEdit}
-                        />
-                    </button>
-                    <button className="icon-button delete" onClick={() => onDelete?.(property.id)}>
-                        <FontAwesomeIcon
-                            icon={faTrash}
-                        />
-                    </button>
-                </div>
-            )}
-            {mainImage ? (
-                <img
-                    src={mainImage || "https://via.placeholder.com/350x200?text=Propiedad"}
-                    className="card-img-top"
-                    alt={title}
-                    style={{ height: "200px", objectFit: "cover" }}
-                />
-            ) : (
-                <div style={{ height: "200px" }}></div>
-            )}
-            <div className="card-body">
-                <h5 className="card-title">{title}</h5>
-                <p className="card-text fw-bold">${nightlyPrice.toLocaleString()} / noche</p>
-
-                <div className="d-flex justify-content-between mb-2">
-                    <span>
-                        <FontAwesomeIcon icon={faUser} className="me-1" />
-                        {maxGuests} Huéspedes
-                    </span>
-                    <span>
-                        <FontAwesomeIcon icon={faBed} className="me-1" />
-                        {bedrooms} Dormitorios
-                    </span>
-                    <span>
-                        <FontAwesomeIcon icon={faBath} className="me-1" />
-                        {bathrooms} Baños
-                    </span>
-                </div>
-
-                <p className="mb-2" style={{ fontSize: "0.9rem", color: "#555" }}>
-                    {fullAddress}
-                </p>
-
-                <div>
-                    <FontAwesomeIcon icon={faStar} className="text-warning me-1" />
-                    {averageRating.toFixed(1)}
-                </div>
-            </div>
+  const handleCardClick = () => {
+    window.location.href = `/property/${property.id}`;
+  };
+  return (
+    <div className="card mb-3" style={{ width: "22rem" }}>
+      {showActions && (
+        <div className="d-flex justify-content-rigth position-absolute top-0 end-0 m-2">
+          <button className="icon-button edit" onClick={() => onEdit?.(property.id)}>
+            <FontAwesomeIcon
+              icon={faEdit}
+            />
+          </button>
+          <button className="icon-button delete" onClick={() => onDelete?.(property.id)}>
+            <FontAwesomeIcon
+              icon={faTrash}
+            />
+          </button>
         </div>
-    );
+      )}
+      <div onClick={handleCardClick}>
+        {mainImage ? (
+          <img
+            src={mainImage || "https://via.placeholder.com/350x200?text=Propiedad"}
+            className="card-img-top"
+            alt={title}
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+        ) : (
+          <div style={{ height: "200px" }}></div>
+        )}
+        <div className="card-body">
+          <h5 className="card-title">{title}</h5>
+          <p className="card-text fw-bold">${nightlyPrice.toLocaleString()} / noche</p>
+
+          <div className="d-flex justify-content-between mb-2">
+            <span>
+              <FontAwesomeIcon icon={faUser} className="me-1" />
+              {maxGuests} Huéspedes
+            </span>
+            <span>
+              <FontAwesomeIcon icon={faBed} className="me-1" />
+              {bedrooms} Dormitorios
+            </span>
+            <span>
+              <FontAwesomeIcon icon={faBath} className="me-1" />
+              {bathrooms} Baños
+            </span>
+          </div>
+
+          <p className="mb-2" style={{ fontSize: "0.9rem", color: "#555" }}>
+              {fullAddress}
+          </p>
+
+          <div>
+              <FontAwesomeIcon icon={faStar} className="text-warning me-1" />
+              {averageRating.toFixed(1)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
