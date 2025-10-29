@@ -16,7 +16,9 @@
     "@fortawesome/react-fontawesome": "^3.1.0",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
+    "date-fns": "^4.1.0",
     "react": "^19.1.1",
+    "react-day-picker": "^9.11.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4"
   },

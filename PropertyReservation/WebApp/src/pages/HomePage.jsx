@@ -11,8 +11,8 @@ export default function HomePage() {
 
   const loadProperties = async () => {
     try {
-      const res = await getProperties();
-      setProperties(res.data);
+      const data = await getProperties();
+      setProperties(data);
     } catch (error) {
       console.error("Error cargando propiedades:", error);
     }

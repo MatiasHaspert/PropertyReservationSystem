@@ -6,7 +6,7 @@ import Reviews from "../components/Reviews";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faBed, faBath, faStar } from '@fortawesome/free-solid-svg-icons';
-
+import AvailabilityCalendar from "../components/AvailabilityCalendar";
 export default function PropertyDetailPage() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
@@ -17,8 +17,8 @@ export default function PropertyDetailPage() {
 
   const loadPropertyDetails = async () => {
     try {
-      const res = await getPropertyDetails(id);
-      setProperty(res.data);
+      const data = await getPropertyDetails(id);
+      setProperty(data);
     } catch (error) {
       console.error("Error al cargar el detalle de la propiedad:", error);
     }
@@ -30,7 +30,7 @@ export default function PropertyDetailPage() {
 
   return (
     <div className="container mt-4">
-
+       
       {/* Fila principal: información y carrusel */}
       <div className="row mb-4">
         {/* Columna izquierda: datos principales */}
@@ -40,7 +40,7 @@ export default function PropertyDetailPage() {
           <div className="d-flex justify-content-center gap-3 mb-2">
               <span>
                 <FontAwesomeIcon icon={faUser} className="me-1" />
-                {property.maxGuests} Huéspedes
+                          {property.maxGuests} Huéspedes
               </span>
               <span>
                 <FontAwesomeIcon icon={faBed} className="me-1" />
@@ -79,11 +79,15 @@ export default function PropertyDetailPage() {
               </div>
             </div>
           )}
+
+         <div className="mt-4">
+            <AvailabilityCalendar propertyId={property.id} />
+         </div>
         </div>
 
         {/* Columna derecha: carrusel */}
         <div className="col-lg-6 mb-3">
-          <Carousel images={property.images} />
+            <Carousel images={property.images} />
         </div>
       </div>
 

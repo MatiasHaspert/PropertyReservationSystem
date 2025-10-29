@@ -18,8 +18,8 @@ export default function MyPropertiesPage() {
   const loadProperties = async () => {
       try {
           // const data = await getPropertiesByUser(userId);
-          const res = await getProperties();
-          setProperties(res.data);
+          const data = await getProperties();
+          setProperties(data);
       } catch (error) {
           console.error("Error cargando propiedades:", error);
           setErrorMessage("Error al cargar tus propiedades. Intenta nuevamente más tarde.");
