@@ -67,7 +67,7 @@ namespace Backend.WebAPI.Controllers
             try
             {
                 var resertvationResponse = await _reservationService.CreateReservationAsync(reservationDTO);
-                return CreatedAtAction("GetReservation", new { id = resertvationResponse.Id }, resertvationResponse);
+                return Ok(resertvationResponse);
             }
             catch(ArgumentException ex)
             {
