@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { differenceInDays, format } from "date-fns";
 import { createReservation } from "../services/reservationService";
 
-export default function BookingPanel({ selectedRange, nightlyPrice, maxGuests, propertyId }) {
+export default function ReservationPanel({ selectedRange, nightlyPrice, maxGuests, propertyId }) {
     const [guests, setGuests] = useState(1);
     const [totalPrice, setTotalPrice] = useState(0);
 

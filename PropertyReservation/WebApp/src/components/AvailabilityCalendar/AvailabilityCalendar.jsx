@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { eachDayOfInterval, parseISO } from "date-fns";
+import { eachDayOfInterval, parseISO, addYears, startOfToday, startOfMonth, addMonths } from "date-fns";
 import { getPropertyCalendar } from "../../services/propertyService";
 import "./AvailabilityCalendar.css";
 
@@ -24,21 +24,34 @@ export default function AvailabilityCalendar({ propertyId, onRangeSelected}) {
 
     if (!availability) return <p>Cargando calendario...</p>;
 
-    // Convertir reservedRanges a fechas deshabilitadas
-    const disabledDays = availability.reservedRanges.flatMap(range =>
+    // Días reservados (no se pueden seleccionar)
+    const reservedDays = availability.reservedRanges.flatMap(range =>
         eachDayOfInterval({
             start: parseISO(range.startDate),
             end: parseISO(range.endDate),
         })
     );
 
-    // Convertir availableRanges a intervalos seleccionables
+    // Días disponibles de la propiedad
     const availableDays = availability.availableRanges.flatMap(range =>
         eachDayOfInterval({
             start: parseISO(range.startDate),
             end: parseISO(range.endDate),
         })
     );
+
+    // Calcular días fuera de los rangos disponibles
+    const allPossibleDays = eachDayOfInterval({
+        start: startOfToday(),
+        end: addYears(startOfToday(), 1), // rango de 1 año
+    });
+
+    const unavailableDays = allPossibleDays.filter(
+        day => !availableDays.some(av => av.toDateString() === day.toDateString())
+    );
+
+    // Juntar reservados + fuera de disponibilidad
+    const disabledDays = [...reservedDays, ...unavailableDays];
 
     const handleSelectRange = (range) => {
         if (!range?.from) {
@@ -47,7 +60,6 @@ export default function AvailabilityCalendar({ propertyId, onRangeSelected}) {
             return;
         }
 
-        // Si el usuario solo seleccionó el primer día
         if (!range?.to) {
             setSelectedRange(range);
             onRangeSelected?.(range);
@@ -56,24 +68,19 @@ export default function AvailabilityCalendar({ propertyId, onRangeSelected}) {
 
         const allDays = eachDayOfInterval({ start: range.from, end: range.to });
 
-        // Encontrar el primer día deshabilitado dentro del rango
+        // Si el rango incluye días deshabilitados, se corta
         const firstDisabled = allDays.find(day =>
-            disabledDays.some(disabled =>
-                disabled.toDateString() === day.toDateString()
-            )
+            disabledDays.some(d => d.toDateString() === day.toDateString())
         );
 
         if (firstDisabled) {
-            // "Cortamos" el rango justo antes del día deshabilitado
             const validEnd = new Date(firstDisabled);
             validEnd.setDate(validEnd.getDate() - 1);
 
-            // Solo actualizar si el rango válido es mayor o igual a la fecha de inicio
             if (validEnd >= range.from) {
                 setSelectedRange({ from: range.from, to: validEnd });
-                onRangeSelected?.(range);
+                onRangeSelected?.({ from: range.from, to: validEnd });
             } else {
-                // Si el primer día ya está deshabilitado, no marcamos nada
                 setSelectedRange(undefined);
                 onRangeSelected?.(undefined);
             }
@@ -84,7 +91,8 @@ export default function AvailabilityCalendar({ propertyId, onRangeSelected}) {
         onRangeSelected?.(range);
     };
 
-
+    // Límite de meses visibles (desde hoy hasta 11 meses)
+    const today = startOfToday();
 
     return (
         <div className="border rounded p-3 bg-light">
@@ -95,6 +103,9 @@ export default function AvailabilityCalendar({ propertyId, onRangeSelected}) {
                 selected={selectedRange}
                 onSelect={handleSelectRange}
                 disabled={disabledDays}
+                fromMonth={startOfMonth(today)} // primer mes visible
+                toMonth={addMonths(today, 11)}  // último mes visible (11 meses más)
+                numberOfMonths={2}              // 2 meses se muestran a la vez
                 modifiers={{
                     checkIn: selectedRange?.from,
                     checkOut: selectedRange?.to,

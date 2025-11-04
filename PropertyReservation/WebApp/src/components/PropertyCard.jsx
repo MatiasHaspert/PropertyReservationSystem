@@ -15,7 +15,7 @@ export default function PropertyCard({ property, showActions = false, onDelete, 
   } = property;
 
   const fullAddress = `${address.streetAddress}, ${address.city}, ${address.state}, ${address.country}`;
-
+  console.log(mainImage);
   const handleCardClick = () => {
     window.location.href = `/property/${property.id}`;
   };
@@ -38,7 +38,7 @@ export default function PropertyCard({ property, showActions = false, onDelete, 
       <div onClick={handleCardClick}>
         {mainImage ? (
           <img
-            src={mainImage || "https://via.placeholder.com/350x200?text=Propiedad"}
+            src={mainImage.url || "https://via.placeholder.com/350x200?text=Propiedad"}
             className="card-img-top"
             alt={title}
             style={{ height: "200px", objectFit: "cover" }}
