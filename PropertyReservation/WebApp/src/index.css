@@ -84,5 +84,8 @@ button:focus-visible {
   color: #dc3545; /* rojo */
 }
 
-
+.reservation-sticky {
+    position: sticky;
+    top: 100px; /* Ajusta la separación desde el top */
+}
 

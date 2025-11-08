@@ -34,7 +34,7 @@ namespace Backend.Infrastructure.Repositories
             return await _context.Properties
                 .Include(p => p.Images)
                 .Include(p => p.Reviews)
-                    .ThenInclude(r => r.User) 
+                .ThenInclude(r => r.User) 
                 .Include(p => p.Amenities)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }

@@ -1,0 +1,75 @@
+.search-bar-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+/* Campo básico */
+.search-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    padding: 6px 10px;
+    border-radius: 8px;
+    min-width: 140px;
+}
+
+.search-field input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    min-width: 80px;
+}
+
+/* Date field arrangement */
+.date-field {
+    position: relative;
+}
+
+/* Popup calendar */
+.calendar-popup {
+    position: absolute;
+    z-index: 1200;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Botones dentro del popup */
+.calendar-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+/* Botón principal de buscar */
+.search-button {
+    background: #212529;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+.search-bar-container {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.calendar-popup {
+    left: 0;
+    right: 0;
+    width: auto;
+}
+}

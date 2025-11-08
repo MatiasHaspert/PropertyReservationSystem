@@ -13,10 +13,17 @@ export const getProperty = async (id) => {
     return response.data;
 }
 
-// Desarrollar endpoint en el backend para esto
+// Desarrollar endpoint en el backend
 export const getPropertiesByUser = async (userId) => {
   const response = await axios.get(`${API_URL}/user/${userId}`);
   return response.data;
+}
+
+// Desarrollar endpoint en el backend
+export const searchProperties = async (search) => {
+    console.log(search);
+    const response = await axios.get(`${API_URL}/${search}`);
+    return response.data;
 }
 
 export const getPropertyDetails = async (id) => {

@@ -9,6 +9,7 @@ import { faUser, faBed, faBath, faStar } from '@fortawesome/free-solid-svg-icons
 import AvailabilityCalendar from "../components/AvailabilityCalendar/AvailabilityCalendar";
 import ReservationPanel from "../components/ReservationPanel";
 
+
 export default function PropertyDetailPage() {
     const { id } = useParams();
     const [property, setProperty] = useState(null);
@@ -72,7 +73,7 @@ export default function PropertyDetailPage() {
                                     <span
                                         key={a.id}
                                         className="badge rounded-pill border py-2 px-2"
-                                        style={{
+                                        style0={{
                                             backgroundColor: "transparent",
                                             borderColor: "#000000ff",
                                             color: "#494848ff",
@@ -99,15 +100,41 @@ export default function PropertyDetailPage() {
                 </div>
 
                 {/* Columna derecha: panel de reserva */}
-                <div className="col-lg-4">
-                    <ReservationPanel
-                        selectedRange={selectedRange}
-                        nightlyPrice={property.nightlyPrice}
-                        maxGuests={property.maxGuests}
-                        propertyId={property.id}
-                    />
+                <div className="col-lg-4 position-relative">
+                    <div className="reservation-sticky"> 
+                        <ReservationPanel
+                            selectedRange={selectedRange}
+                            nightlyPrice={property.nightlyPrice}
+                            maxGuests={property.maxGuests}
+                            propertyId={property.id}
+                            />
+                    </div>
                 </div>
+
+
             </div>
         </div>
     );
 }
+
+/*
+Luego cuando agreguemos autenticacion podes ocultar el panel de reservas a los usuario no registrados
+<div className="col-lg-4 position-relative">
+    {isAuthenticated ? (
+        <div className="reservation-sticky">
+            <ReservationPanel
+                selectedRange={selectedRange}
+                nightlyPrice={property.nightlyPrice}
+                maxGuests={property.maxGuests}
+                propertyId={property.id}
+            />
+        </div>
+    ) : (
+        <div className="alert alert-info p-3">
+            <p className="mb-2">Para reservar esta propiedad necesitas una cuenta.</p>
+            <a href="/login" className="btn btn-primary w-100">Iniciar sesión</a>
+        </div>
+    )}
+</div>
+
+*/

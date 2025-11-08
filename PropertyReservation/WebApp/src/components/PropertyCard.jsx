@@ -15,12 +15,12 @@ export default function PropertyCard({ property, showActions = false, onDelete, 
   } = property;
 
   const fullAddress = `${address.streetAddress}, ${address.city}, ${address.state}, ${address.country}`;
-  console.log(mainImage);
   const handleCardClick = () => {
     window.location.href = `/property/${property.id}`;
-  };
+    };
+
   return (
-    <div className="card mb-3" style={{ width: "22rem" }}>
+    <div className="card mb-3" style={{ minWidth: '200px' }}>
       {showActions && (
         <div className="d-flex justify-content-rigth position-absolute top-0 end-0 m-2">
           <button className="icon-button edit" onClick={() => onEdit?.(property.id)}>
@@ -53,15 +53,15 @@ export default function PropertyCard({ property, showActions = false, onDelete, 
           <div className="d-flex justify-content-between mb-2">
             <span>
               <FontAwesomeIcon icon={faUser} className="me-1" />
-              {maxGuests} Huéspedes
+              {maxGuests}
             </span>
             <span>
               <FontAwesomeIcon icon={faBed} className="me-1" />
-              {bedrooms} Dormitorios
+              {bedrooms}
             </span>
             <span>
               <FontAwesomeIcon icon={faBath} className="me-1" />
-              {bathrooms} Baños
+              {bathrooms}
             </span>
           </div>
 
